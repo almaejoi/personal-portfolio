@@ -1,0 +1,2393 @@
+/* ==========================================================================
+   Almejoy C. Ancero, Portfolio Stylesheet
+   --------------------------------------------------------------------------
+   1. Design tokens (colors, fonts, spacing)
+   2. Base styles
+   3. Reusable pieces (container, section backgrounds, shapes, buttons, icons)
+   4. Navigation
+   5. Hero
+   6. About
+   7. Projects
+   8. Skills
+   9. Certificates
+   10. Contact
+   11. Footer
+   12. Popups (certificate PDF and project screenshot)
+   13. Scroll animations
+   14. Responsive (tablet, mobile)
+   15. Reduced motion
+   ========================================================================== */
+
+
+/* 1. Design tokens
+   Change a color here and it updates everywhere on the site.
+   The site uses ONLY these four colors, plus white and one dark neutral for text.
+   Green is the main color; pink is the accent.
+   None of the four colors is dark enough to be readable as text (all are below 2.5:1
+   on white), so every piece of text uses --text (#333333), which is readable on all of them.
+   Shadows, lines and see-through overlays are these same colors made partly transparent.
+   Colored glows use color-mix() with the variables below, so they follow any change
+   to these values automatically instead of keeping an old copy of the color. */
+:root {
+    /* The approved palette */
+    --green: #A8DF8E;          /* primary green: main identity, primary buttons, highlights */
+    --mint: #BDEFC6;           /* light mint green: light backgrounds, section accents, decoration */
+    --soft-pink: #F9D9E3;      /* soft pink: pink backgrounds, cards, subtle highlights */
+    --pink: #FFAAB8;           /* accent pink: pink buttons, icons, hover effects, accents */
+
+    /* Neutrals */
+    --white: #FFFFFF;          /* neutral backgrounds and card surfaces */
+    --text: #333333;           /* all text */
+    --line: rgba(51, 51, 51, 0.12);
+
+    /* Soft neutral shadows, and a pink glow for hover */
+    --shadow: 0 18px 40px -22px rgba(51, 51, 51, 0.3);
+    --shadow-lift: 0 28px 56px -24px rgba(51, 51, 51, 0.38);
+    --shadow-pink: 0 22px 44px -20px color-mix(in srgb, var(--pink) 60%, transparent);
+
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    --container: 1160px;
+    --gutter: 32px;
+    --section-space: 120px;
+    --nav-height: 80px;
+    --radius: 22px;
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* 2. Base styles */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    /* Stops the sticky navbar from covering section headings after a link click */
+    scroll-padding-top: var(--nav-height);
+}
+
+body {
+    margin: 0;
+    background: var(--white);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--text);
+}
+
+p {
+    margin: 0 0 1em;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    color: inherit;
+}
+
+ul, ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Emphasized words in headings: dark text over a green highlighter stroke
+   (the palette greens are too light to be readable as text on their own) */
+em {
+    font-style: italic;
+    color: var(--text);
+    background: linear-gradient(transparent 72%, var(--green) 72%, var(--green) 88%, transparent 88%);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+/* Clear focus outline for keyboard users */
+:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 16px;
+    z-index: 200;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--green);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.skip-link:focus {
+    top: 16px;
+}
+
+
+/* 3. Reusable pieces */
+.container {
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+}
+
+.section {
+    position: relative;
+    overflow: hidden;   /* decorative shapes never cause sideways scrolling */
+    padding: var(--section-space) 0;
+}
+
+/* Keeps section content above the decorative shapes */
+.section > .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Every section (matching Projects): when its nav link is clicked, skip most of the
+   section's top padding so the label lands 40px below the navbar on every section. */
+.section:not(.hero) {
+    scroll-margin-top: calc(40px - var(--section-space));
+}
+
+/* Section backgrounds: green and white, so the page feels like one piece.
+   Hero = mint and white, About = white into mint, Projects = mint,
+   Skills = solid green, Certificates = white with a green glow,
+   Contact = mint into white with soft pink at the far end, Footer = solid green.
+   (The class names are kept from earlier designs so index.html does not change.) */
+.section--blush {
+    background: linear-gradient(180deg, var(--white), var(--mint));
+}
+
+.section--green {
+    background: var(--mint);
+}
+
+.section--rose {
+    background:
+        radial-gradient(38rem 26rem at 100% 0%, color-mix(in srgb, var(--mint) 90%, transparent), transparent 70%),
+        var(--white);
+}
+
+/* Green and pink mixed directly turn a muddy grey-brown, so this gradient
+   passes through white before the soft pink at the far end */
+.section--mixed {
+    background: linear-gradient(135deg, var(--mint), var(--white) 50%, var(--white) 72%, var(--soft-pink));
+}
+
+/* Solid green section (used for Skills) */
+.section--dark {
+    background: var(--green);
+    color: var(--text);
+}
+
+/* On the green background, the heading's highlighter stroke is soft pink instead */
+.section--dark em {
+    background-image: linear-gradient(transparent 72%, var(--soft-pink) 72%, var(--soft-pink) 88%, transparent 88%);
+}
+
+/* Decorative shapes: placed per section, always behind the content */
+.shape {
+    position: absolute;
+    pointer-events: none;
+}
+
+.shape--ring {
+    width: 320px;
+    height: 320px;
+    border: 1px solid var(--green);
+    border-radius: 50%;
+    opacity: 0.6;
+}
+
+/* Dots are green by default; the hero keeps a pink set as a small accent */
+.shape--dots {
+    width: 180px;
+    height: 180px;
+    background-image: radial-gradient(var(--green) 1.5px, transparent 1.5px);
+    background-size: 18px 18px;
+    opacity: 0.35;
+}
+
+.section__head {
+    margin-bottom: 64px;
+}
+
+.section__label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+.section__label span {
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Short green line with a pink tip between the number and label */
+.section__label span::after {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 2px;
+    margin-left: 14px;
+    vertical-align: middle;
+    background: linear-gradient(90deg, var(--green) 65%, var(--pink) 65%);
+}
+
+/* On the green Skills background the line is white with a pink tip */
+.section--dark .section__label span::after {
+    background: linear-gradient(90deg, var(--white) 65%, var(--pink) 65%);
+}
+
+.section__title {
+    max-width: 18ch;
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+}
+
+/* Buttons: green with dark text (white text would be unreadable on this green).
+   Hover turns them accent pink with a soft pink glow. */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 32px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--green);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: background-color 0.35s ease, box-shadow 0.35s var(--ease),
+                transform 0.35s var(--ease);
+}
+
+.btn:hover {
+    background: var(--pink);
+    box-shadow: var(--shadow-pink);
+    transform: translateY(-2px);
+}
+
+.btn .icon {
+    transition: transform 0.35s var(--ease);
+}
+
+.btn:hover .icon {
+    transform: translateX(4px);
+}
+
+/* The main call to action on the homepage is a little larger */
+.btn--hero {
+    padding: 18px 36px;
+    font-size: 0.875rem;
+}
+
+/* Lighter outline version (used on certificate cards) */
+.btn--outline {
+    padding: 11px 22px;
+    border: 1.5px solid var(--green);
+    background: transparent;
+    color: var(--text);
+    font-size: 0.75rem;
+    box-shadow: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease,
+                transform 0.35s var(--ease);
+}
+
+.btn--outline:hover {
+    background: var(--soft-pink);
+    border-color: var(--pink);
+    color: var(--text);
+    box-shadow: none;
+    transform: translateY(-2px);
+}
+
+/* Disabled button (for example, a project without a link yet): faded, no hover */
+.btn:disabled,
+.btn:disabled:hover {
+    opacity: 0.5;
+    background: var(--green);
+    box-shadow: none;
+    transform: none;
+    cursor: not-allowed;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Technology tags alternate mint and green */
+.tags li {
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: var(--mint);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--text);
+}
+
+.tags li:nth-child(even) {
+    background: var(--green);
+}
+
+/* Icons: drawn with lines, in the color of the surrounding text */
+.icon-sprite {
+    display: none;
+}
+
+.icon {
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* A soft circle that holds an icon */
+.icon-badge {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.icon-badge--pink {
+    background: var(--pink);
+    color: var(--white);
+}
+
+/* White circle with a pink icon, for green backgrounds */
+.icon-badge--glass {
+    background: var(--white);
+    color: var(--pink);
+}
+
+
+/* 4. Navigation */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.9);   /* white, slightly see-through */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 1px 0 transparent;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Added by JavaScript once the page is scrolled */
+.site-header.is-scrolled {
+    box-shadow: 0 10px 30px -18px rgba(51, 51, 51, 0.35);
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-height);
+}
+
+.nav__logo {
+    font-family: var(--font-serif);
+    font-size: 1.875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    color: var(--text);
+}
+
+.nav__dot {
+    color: var(--pink);
+}
+
+/* The links fill the space after the logo and are spread evenly across it,
+   starting a comfortable distance away from the logo */
+.nav__menu {
+    display: flex;
+    flex: 1;
+    justify-content: space-evenly;
+    gap: 8px;
+    margin-left: 72px;
+}
+
+/* A mint pill on hover, a green pill for the current section,
+   which also gets a small white dot */
+.nav__link {
+    position: relative;
+    display: block;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    color: var(--text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav__link::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 2px;
+    width: 5px;
+    height: 5px;
+    margin-left: -2.5px;
+    border-radius: 50%;
+    background: var(--white);
+    transform: scale(0);
+    transition: transform 0.4s var(--ease);
+}
+
+.nav__link:hover {
+    background: var(--mint);
+    color: var(--text);
+}
+
+.nav__link.is-active {
+    background: var(--green);
+    color: var(--text);
+}
+
+.nav__link.is-active::after {
+    transform: scale(1);
+}
+
+/* Hamburger button: hidden on desktop */
+.nav__toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 7px;
+    width: 44px;
+    height: 44px;
+    padding: 0 10px;
+    border: 0;
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.nav__toggle-bar {
+    display: block;
+    height: 1.5px;
+    background: var(--text);
+    transition: transform 0.35s var(--ease);
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:first-child {
+    transform: translateY(4.25px) rotate(45deg);
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:last-child {
+    transform: translateY(-4.25px) rotate(-45deg);
+}
+
+
+/* 5. Hero */
+.hero {
+    display: flex;
+    align-items: center;
+    min-height: calc(100vh - var(--nav-height));
+    padding: 72px 0 112px;
+    /* Base only: mint on the left, through white, back to mint on the right.
+       Stronger color comes from the two glows below. */
+    background: linear-gradient(105deg, var(--mint), var(--white) 46%, var(--white) 56%, var(--mint));
+}
+
+/* Green glow in the lower-left corner and a mint glow in the upper-right.
+   (A pink glow here would mix with the green into beige, so pink stays in the small details.) */
+.hero::before,
+.hero::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero::before {
+    left: -12%;
+    bottom: -30%;
+    width: 44vw;
+    height: 44vw;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--green) 60%, transparent), transparent);
+}
+
+.hero::after {
+    right: -8%;
+    top: -26%;
+    width: 34vw;
+    height: 34vw;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--mint) 70%, transparent), transparent);
+}
+
+.hero__ring {
+    top: -120px;
+    left: -100px;
+}
+
+.hero__dots {
+    right: 3%;
+    bottom: 6%;
+    background-image: radial-gradient(var(--pink) 1.5px, transparent 1.5px);
+}
+
+.hero__inner {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 80px;
+}
+
+/* Small label above the name: plain text, no background */
+.hero__greeting {
+    display: inline-block;
+    margin-bottom: 22px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+/* Both lines of the name are italic, so "Almejoy C." matches "Ancero" */
+.hero__name {
+    margin-bottom: 28px;
+    font-size: clamp(3.25rem, 7.4vw, 6.5rem);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+}
+
+/* "Ancero" gets the same green highlighter stroke as the other emphasized words */
+.hero__name em {
+    /* Extra room so the stroke covers the end of the slanted last letter */
+    padding-right: 0.08em;
+}
+
+.hero__title {
+    margin-bottom: 24px;
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--text);
+}
+
+/* Soft pink highlighter stroke behind the title text.
+   It sits on an inline <span>, so it starts at "Aspiring", ends at "Designer",
+   and when the title wraps, each line gets its own stroke under its own words.
+   "clone" makes every line's stroke a complete piece. */
+.hero__title-text {
+    background: linear-gradient(transparent 55%, var(--soft-pink) 55%, var(--soft-pink) 90%, transparent 90%);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+.hero__intro {
+    max-width: 44ch;
+    margin-bottom: 40px;
+    font-size: 1.0625rem;
+    color: var(--text);
+}
+
+.hero__photo {
+    display: flex;
+    justify-content: center;
+}
+
+/* Arch-shaped photo with a green border and two decorations behind it:
+   a solid green arch (top left) and an accent pink outline (bottom right). */
+.photo-frame {
+    position: relative;
+    width: min(100%, 420px);
+    isolation: isolate;   /* keeps the decorations layered behind the photo */
+}
+
+.photo-frame::before,
+.photo-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 999px 999px 32px 32px;
+    transition: transform 0.6s var(--ease);
+}
+
+.photo-frame::before {
+    background: var(--green);
+    transform: translate(-18px, -18px);
+}
+
+.photo-frame::after {
+    border: 2px solid var(--pink);
+    transform: translate(22px, 22px);
+}
+
+.photo-frame img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 11 / 14;
+    padding: 6px;   /* the gradient background shows through as a border */
+    object-fit: cover;
+    border-radius: 999px 999px 32px 32px;
+    background: linear-gradient(160deg, var(--green) 40%, var(--mint));
+    box-shadow: var(--shadow-lift);
+}
+
+.photo-frame:hover::before {
+    transform: translate(-10px, -10px);
+}
+
+.photo-frame:hover::after {
+    transform: translate(12px, 12px);
+}
+
+
+/* 6. About
+   A green introduction card on the left, three smaller cards on the right. */
+.about__dots {
+    top: 48px;
+    right: 4%;
+}
+
+.about__grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    align-items: start;
+    gap: 32px;
+}
+
+.about__intro {
+    position: relative;
+    overflow: hidden;
+    padding: 44px 40px;
+    border-radius: var(--radius);
+    background: var(--green);
+    box-shadow: var(--shadow-lift);
+}
+
+/* White ring in the corner of the green card */
+.about__intro::after {
+    content: '';
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 150px;     /* small enough to stay in the corner, clear of the text */
+    height: 150px;
+    border: 1px solid var(--white);
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+/* No top margin: the card no longer has an icon above the text,
+   so the card's own padding spaces the text evenly at the top and bottom */
+.about__lead {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: 1.35;
+    color: var(--text);
+}
+
+.about__body {
+    display: grid;
+    gap: 20px;
+    color: var(--text);
+}
+
+.about__card {
+    padding: 28px 32px;
+    border-left: 4px solid var(--green);
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow);
+    transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+
+.about__card:hover {
+    transform: translateX(6px);
+    box-shadow: var(--shadow-lift);
+}
+
+/* The personal card gets the one soft pink accent in this section */
+.about__card--pink {
+    border-left-color: var(--pink);
+    background: var(--soft-pink);
+}
+
+.about__card p {
+    margin: 0;
+}
+
+.about__card strong {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.about__card-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    font-size: 1.625rem;
+}
+
+
+/* 7. Projects
+   A large feature card: screenshot on the left, details on the right. */
+.projects__ring {
+    top: -100px;
+    right: -80px;
+    border-color: var(--green);
+}
+
+.project {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: start;
+    gap: 56px;
+    padding: 48px;
+    overflow: hidden;
+    border-radius: calc(var(--radius) + 6px);
+    background: var(--white);
+    box-shadow: var(--shadow-lift);
+}
+
+/* Green stripe with a pink tip along the top of the card */
+.project::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--green), var(--mint) 82%, var(--pink) 82%);
+}
+
+/* Center the screenshot beside the (taller) project details on desktop */
+.project__media {
+    align-self: center;
+}
+
+/* Laptop mockup around the real screenshot.
+   laptop.png (670 x 373) has wide see-through margins, so this box covers only the
+   part with the laptop (x 119-583, y 44-356 of the image) and the full, uncropped image
+   is positioned inside it. The see-through margins simply extend past the box. */
+.laptop {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    aspect-ratio: 464 / 312;
+    transition: transform 0.5s var(--ease);
+}
+
+.laptop__frame {
+    position: absolute;
+    left: -25.647%;     /* -119 / 464 */
+    top: -14.103%;      /* -44 / 312 */
+    width: 144.397%;    /* 670 / 464 */
+    max-width: none;
+    height: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 18px 18px rgba(51, 51, 51, 0.16));
+    transition: filter 0.5s var(--ease);
+}
+
+/* The screenshot sits on top of the laptop's screen, covering it exactly.
+   main.js tilts it to the screen's four corners. Without JavaScript it falls back
+   to a plain rectangle that fits just inside the screen. */
+.laptop__screen {
+    position: absolute;
+    z-index: 1;
+    left: 6.903%;       /* (151.03 - 119) / 464 */
+    top: 9.016%;        /* (72.13 - 44) / 312 */
+    width: 53.776%;
+    height: 54.381%;
+    overflow: hidden;
+    /* The screenshot is wider than the laptop screen, so it is shown at full width
+       (nothing cut off or stretched). The space below it is filled with the
+       screenshot's own bottom color (#BFECAC), so the page looks like it continues. */
+    background: #BFECAC;
+}
+
+.laptop__screen img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.project:hover .laptop {
+    transform: translateY(-4px);
+}
+
+.project:hover .laptop__frame {
+    filter: drop-shadow(0 22px 20px color-mix(in srgb, var(--pink) 45%, transparent));
+}
+
+/* Space between project cards */
+.projects {
+    display: grid;
+    gap: 40px;
+}
+
+/* Laptop + phone mockup (Ziren), built on images/laptop2.png (612 x 383).
+   Like the laptop above, the box covers only the part with the devices
+   (x 58-588, y 40-342 of the image); the see-through margins extend past it.
+   "isolation" keeps the phone screenshot's blending inside this mockup. */
+.mockup {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    aspect-ratio: 530 / 302;
+    isolation: isolate;
+    transition: transform 0.5s var(--ease);
+}
+
+.mockup__frame {
+    position: absolute;
+    left: -10.943%;     /* -58 / 530 */
+    top: -13.245%;      /* -40 / 302 */
+    width: 115.472%;    /* 612 / 530 */
+    max-width: none;
+    height: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 18px 18px rgba(51, 51, 51, 0.16));
+    transition: filter 0.5s var(--ease);
+}
+
+/* Click areas: the whole mockup opens the dashboard; the phone (drawn later, so on top)
+   opens the mobile screenshot */
+.mockup__laptop {
+    position: absolute;
+    inset: 0;
+}
+
+.mockup__phone {
+    position: absolute;
+    left: 0.755%;       /* (62 - 58) / 530 */
+    top: 37.748%;       /* (154 - 40) / 302 */
+    width: 15.849%;     /* 84 / 530 */
+    height: 60.265%;    /* 182 / 302 */
+}
+
+.mockup__screen {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* The extra classes make this win over the 16:10 thumbnail rule for extra screenshots
+   (".project__shot:not(:first-child) img", further down): mockup screenshots keep their own shape */
+.mockup .project__shot .mockup__screen img {
+    display: block;
+    flex-shrink: 0;
+    width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    object-fit: contain;
+}
+
+/* Laptop: the screenshot sits behind laptop2.png, whose screen is see-through, so the
+   bezel and the phone in front stay visible over it. The browser's own toolbar at the
+   top of the screenshot (tabs and address bar, the first 109 of its 1920 pixels' width
+   ratio) is hidden, so only the Ziren dashboard shows. Below it, the dashboard's own
+   background color (#F7F6F3) fills the rest of the screen.
+   Without JavaScript: a plain rectangle just inside the screen. */
+.mockup__screen--laptop {
+    left: 13.675%;
+    top: 7.199%;
+    width: 44.089%;
+    height: 60.252%;
+    background: #F7F6F3;
+}
+
+.mockup__screen--laptop img {
+    margin-top: -5.677%;    /* -109 / 1920: hides the browser toolbar */
+}
+
+/* Phone: laptop2.png's phone screen is solid white, so the screenshot is laid on top and
+   "multiplied" with it: on the white screen it shows exactly as it is, while the phone's
+   black frame and camera cutout stay black over it. The screenshot is slightly wider
+   than this phone's screen, so it fills the width and sits at the bottom; the small band
+   above it uses the app's own top color (#0C0C0E). */
+.mockup__screen--phone {
+    left: 12.726%;
+    top: 6.868%;
+    width: 69.845%;
+    height: 88.5%;
+    justify-content: flex-end;
+    background: #0C0C0E;
+    mix-blend-mode: multiply;
+}
+
+.project:hover .mockup {
+    transform: translateY(-4px);
+}
+
+.project:hover .mockup__frame {
+    filter: drop-shadow(0 22px 20px color-mix(in srgb, var(--pink) 45%, transparent));
+}
+
+/* "Role: Assistant Researcher" label under the project title */
+.project__role {
+    display: inline-block;
+    margin: -4px 0 20px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: var(--soft-pink);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.project__role span {
+    font-weight: 600;
+}
+
+/* Two description paragraphs in a row sit closer together */
+.project__desc:has(+ .project__desc) {
+    margin-bottom: 12px;
+}
+
+/* Screenshots: the first one is large, any others sit two per row below it */
+.project__shots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* Each screenshot is a link that opens the image popup */
+.project__shot {
+    display: block;
+    cursor: zoom-in;
+}
+
+/* Height comes from the image's width/height attributes, so the browser
+   reserves the right space even before a lazy-loaded screenshot arrives */
+.project__shots img {
+    width: 100%;
+    height: auto;
+    background: var(--white);
+}
+
+/* The main screenshot keeps its original shape;
+   "contain" guarantees nothing is cropped or stretched */
+.project__shot:first-child {
+    grid-column: 1 / -1;
+}
+
+.project__shot:first-child img {
+    object-fit: contain;
+}
+
+/* Any extra screenshots: small 16:10 thumbnails, two per row */
+.project__shot:not(:first-child) img {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+}
+
+/* Temporary screenshot area: a plain browser-window outline, no fake content */
+.shot-placeholder {
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+}
+
+.project:hover .shot-placeholder {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-pink);
+}
+
+.shot-placeholder__bar {
+    display: flex;
+    gap: 6px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--mint);
+}
+
+.shot-placeholder__bar span {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--green);
+}
+
+.shot-placeholder__bar span:first-child {
+    background: var(--pink);
+}
+
+.shot-placeholder__text {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--text);
+}
+
+/* "01 ACADEMIC PROJECT" pill: marks this as a real academic project */
+.project__category {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 5px 16px 5px 6px;
+    border-radius: 999px;
+    background: var(--mint);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+.project__number {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--green);
+    letter-spacing: 0.04em;
+    color: var(--text);
+}
+
+.project__title {
+    margin-bottom: 16px;
+    font-size: clamp(2rem, 3.4vw, 2.75rem);
+}
+
+.project__desc {
+    max-width: 52ch;
+    margin-bottom: 24px;
+    color: var(--text);
+}
+
+.project__subhead {
+    margin: 32px 0 14px;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+/* Features in two columns, each with a green check mark */
+.project__features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 24px;
+    margin-bottom: 36px;
+}
+
+.project__features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    color: var(--text);
+}
+
+.project__features .icon {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    stroke-width: 2.5;
+    color: var(--green);
+}
+
+.project__note {
+    margin: 10px 0 0;
+    font-size: 0.8125rem;
+    color: var(--text);
+}
+
+
+/* 8. Skills
+   Three mint cards on the green background. Design (the longest, with descriptions)
+   fills the left column; Tools and Technical are stacked on the right, so both
+   columns end at about the same height. */
+.skills__ring {
+    top: -90px;
+    right: 8%;
+    border-color: var(--white);
+    opacity: 0.6;
+}
+
+/* Tools takes only the height it needs; Technical fills the rest,
+   so the right column ends level with the Design card */
+.skills {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 24px;
+}
+
+.skill-group--design {
+    grid-row: span 2;
+}
+
+.skill-group {
+    padding: 28px 26px;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius);
+    background: var(--mint);
+    box-shadow: var(--shadow);
+}
+
+.skill-group:hover {
+    translate: 0 -4px;
+    border-color: var(--pink);
+    box-shadow: var(--shadow-lift);
+}
+
+/* Card title with a short pink line under it */
+.skill-group__title {
+    margin: 0 0 22px;
+    font-size: 1.75rem;
+}
+
+.skill-group__title::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 3px;
+    margin-top: 10px;
+    border-radius: 3px;
+    background: var(--pink);
+}
+
+/* Design skills: a line icon in a soft pink circle, the name, and a smaller description */
+.skill-list {
+    display: grid;
+    gap: 12px;
+}
+
+.skill-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: var(--white);
+    transition: transform 0.3s var(--ease), box-shadow 0.3s ease;
+}
+
+/* Hover: slides slightly right and shows a pink edge on the left */
+.skill-item:hover {
+    transform: translateX(4px);
+    box-shadow: inset 3px 0 0 var(--pink);
+}
+
+.skill-item__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--soft-pink);
+    color: var(--text);
+}
+
+.skill-item__name {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.skill-item__desc {
+    display: block;
+    margin-top: 3px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* Tools and Technical: a grid of white tiles, each with the official logo
+   (in its own brand colors) centered on top and the name centered below it */
+.logo-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.logo-grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* The first Technical tile (HTML & CSS) holds two logos, so its column is wider */
+.logo-grid--4 {
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+}
+
+/* Laptops and small desktops: the side column is too narrow for four tiles, so 2 x 2.
+   (From 768px down the cards are full width again and four tiles fit.) */
+@media (max-width: 1100px) and (min-width: 769px) {
+    .logo-grid--4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.logo-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 8px 14px;
+    border: 1.5px solid transparent;
+    border-radius: 16px;
+    background: var(--white);
+    text-align: center;
+    transition: transform 0.3s var(--ease), border-color 0.3s ease;
+}
+
+.logo-tile:hover {
+    transform: translateY(-3px);
+    border-color: var(--pink);
+}
+
+/* Every logo gets the same 44px square; "contain" keeps its original proportions */
+.logo-tile__logos {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+.logo-tile__logos img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+
+.logo-tile__name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+
+/* 9. Certificates
+   Three cards per row on desktop, two on tablet, a swipeable carousel on phones. */
+.certificates__dots {
+    bottom: 40px;
+    left: 3%;
+    background-image: radial-gradient(var(--green) 1.5px, transparent 1.5px);
+}
+
+.certificates {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;   /* every card is as tall as the tallest one, even on a new row */
+    gap: 28px;
+}
+
+.certificate {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow);
+}
+
+/* Green stripe with a pink tip along the top of each card */
+.certificate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--green) 78%, var(--pink) 78%);
+}
+
+/* Card lifts gently and gains a pink glow on hover */
+.certificate:hover {
+    translate: 0 -6px;
+    box-shadow: var(--shadow-pink);
+}
+
+.certificate__top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.certificate__type {
+    margin: 0;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+.certificate__title {
+    min-height: 3.6em;   /* room for three lines, so issuers line up even when a title is short */
+    margin-bottom: 10px;
+    font-size: clamp(1.5rem, 2.2vw, 1.75rem);
+    line-height: 1.2;
+}
+
+.certificate__issuer {
+    margin-bottom: 28px;
+    font-size: 0.9375rem;
+    color: var(--text);
+}
+
+/* Pushed to the bottom so dates and buttons line up across cards.
+   Date always sits above the button, so long and short dates look the same. */
+.certificate__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+}
+
+.certificate__date {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-style: italic;
+    color: var(--text);
+}
+
+
+/* Carousel position dots: hidden here, shown on phones (section 14) */
+.carousel-dots {
+    display: none;
+}
+
+
+/* 10. Contact
+   Heading and intro on the left; Email, Location, Social cards on the right. */
+.contact__ring {
+    bottom: -120px;
+    left: -90px;
+    border-color: var(--green);
+}
+
+/* Contact is the last section, so the page can run out of room to scroll before its
+   title reaches the same spot as the other sections (40px below the navbar).
+   This minimum height leaves just enough room; 110px is the footer's height. */
+#contact {
+    min-height: calc(100vh - var(--nav-height) - 40px + var(--section-space) - 110px);
+}
+
+/* Heading starts at the top, like every other section's title */
+.contact__layout {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: start;
+    gap: 72px;
+}
+
+.contact__heading .section__head {
+    margin-bottom: 28px;
+}
+
+.contact__intro {
+    max-width: 44ch;
+    margin: 0;
+    font-size: 1.0625rem;
+    color: var(--text);
+}
+
+.contact__details {
+    display: grid;
+    gap: 18px;
+    margin: 0;
+}
+
+/* Each card: icon on the left, label and details on the right */
+.contact__item {
+    position: relative;
+    padding: 24px 28px 24px 92px;
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow);
+    transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+
+.contact__item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-pink);
+}
+
+.contact__details dt {
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+.contact__details .icon-badge {
+    position: absolute;
+    top: 24px;
+    left: 28px;
+}
+
+.contact__details dd {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text);
+    overflow-wrap: anywhere;   /* long email addresses wrap instead of overflowing */
+}
+
+/* Email: green underline that thickens and turns pink on hover ("dd > a" = only the email link) */
+.contact__details dd > a {
+    text-decoration: none;
+    border-bottom: 2px solid var(--green);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+.contact__details dd > a:hover {
+    border-bottom-color: var(--pink);
+    box-shadow: 0 2px 0 0 var(--pink);
+    color: var(--text);
+}
+
+.contact__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+/* Social links: green pills with an icon that turn pink on hover */
+.contact__socials a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;   /* at least 36px tall, easy to tap */
+    border-radius: 999px;
+    background: var(--mint);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--text);
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s var(--ease);
+}
+
+.contact__socials a:hover {
+    background: var(--soft-pink);
+    color: var(--text);
+    transform: translateY(-2px);
+}
+
+
+/* 11. Footer */
+.site-footer {
+    position: relative;
+    padding: 36px 0;
+    background: var(--green);
+    font-size: 0.875rem;
+    color: var(--text);
+}
+
+/* Mint line with a pink tip along the top of the footer */
+.site-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--mint) 80%, var(--pink) 80%);
+}
+
+.site-footer__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.site-footer p {
+    margin: 0;
+}
+
+.site-footer__top {
+    padding: 6px 16px;
+    border: 1px solid var(--white);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.site-footer__top:hover {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: var(--text);
+}
+
+
+/* 12. Popups (certificate PDF and project screenshot)
+   Built on the HTML <dialog> element. main.js opens them with showModal(),
+   which centers them, dims the page behind (::backdrop), and handles Escape. */
+.modal {
+    width: min(920px, calc(100vw - 32px));
+    max-width: none;
+    max-height: calc(100vh - 32px);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+}
+
+.modal::backdrop {
+    background: rgba(51, 51, 51, 0.7);   /* the dark text color, see-through */
+}
+
+/* Fade in when opening; main.js adds "is-closing" to fade out before closing */
+.modal[open] {
+    animation: modal-in 0.3s var(--ease);
+}
+
+.modal[open]::backdrop {
+    animation: modal-fade-in 0.3s ease;
+}
+
+.modal.is-closing {
+    animation: modal-out 0.2s ease forwards;
+}
+
+.modal.is-closing::backdrop {
+    animation: modal-fade-out 0.2s ease forwards;
+}
+
+@keyframes modal-in {
+    from { opacity: 0; transform: translateY(12px); }
+}
+
+@keyframes modal-out {
+    to { opacity: 0; transform: translateY(12px); }
+}
+
+@keyframes modal-fade-in {
+    from { opacity: 0; }
+}
+
+@keyframes modal-fade-out {
+    to { opacity: 0; }
+}
+
+/* Stops the page behind an open popup from scrolling (class added by main.js) */
+html.has-modal {
+    overflow: hidden;
+}
+
+.modal__box {
+    position: relative;
+    padding: 20px 24px 16px;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--white);
+    border-top: 4px solid var(--green);
+}
+
+.modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.modal__title {
+    font-size: 1.375rem;
+    line-height: 1.25;
+}
+
+/* The X button in the upper-right corner */
+.modal__close {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--text);
+    font-size: 1.625rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.modal__close:hover {
+    background: var(--soft-pink);
+    border-color: var(--pink);
+}
+
+.modal__pdf {
+    display: block;
+    width: 100%;
+    height: min(70vh, 640px);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--mint);
+}
+
+.modal__pdf[hidden] {
+    display: none;
+}
+
+/* Phones: the certificate as a picture, full popup width, in its own proportions */
+.modal__preview {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 160px);   /* never taller than the screen allows */
+    object-fit: contain;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+}
+
+.modal__preview[hidden] {
+    display: none;
+}
+
+/* Shown when the browser cannot display PDFs inside the page */
+.modal__fallback {
+    padding: 32px 16px;
+    border-radius: 8px;
+    background: var(--mint);
+    text-align: center;
+    color: var(--text);
+}
+
+.modal__fallback p {
+    margin-bottom: 18px;
+}
+
+.modal__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 24px;
+    margin: 12px 0 0;
+    font-size: 0.875rem;
+}
+
+.modal__links a {
+    text-decoration: none;
+    color: var(--text);
+    border-bottom: 1px solid var(--green);
+}
+
+.modal__links a:hover {
+    color: var(--text);
+    border-bottom-color: var(--pink);
+}
+
+/* Screenshot popup: the box shrinks to fit the image
+   ("fit-content", because "auto" would stretch an open dialog across the screen) */
+.modal--image {
+    width: fit-content;
+}
+
+.modal--image .modal__box {
+    padding: 0;
+}
+
+.modal--image .modal__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Whole image always visible: never wider or taller than the screen,
+   original proportions kept */
+.modal__image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 36px);
+    object-fit: contain;
+}
+
+
+/* 13. Scroll animations
+   Elements only start hidden when JavaScript is running ("js" class, added in index.html),
+   so content is never lost if JavaScript fails to load.
+   Hover lifts on these elements use the "translate" property instead of "transform",
+   because the fade-in below controls "transform" and would cancel the lift. */
+.js .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.9s var(--ease), transform 0.9s var(--ease),
+                translate 0.45s var(--ease), box-shadow 0.45s var(--ease),
+                border-color 0.45s var(--ease);
+}
+
+.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+
+/* 14. Responsive */
+
+/* Tablet */
+@media (max-width: 992px) {
+    :root {
+        --section-space: 96px;
+    }
+
+    .nav__menu {
+        gap: 2px;
+    }
+
+    .nav__link {
+        padding: 8px 14px;
+    }
+
+    .hero__inner {
+        gap: 56px;
+    }
+
+    .about__grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    /* Tablet and smaller: screenshot on top at full width, details below */
+    .project {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 40px;
+    }
+
+    .certificates {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* The cards reach the bottom of the section at this size, so the dots would sit under them */
+    .certificates__dots {
+        display: none;
+    }
+
+    .contact__layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+
+/* Mobile menu kicks in below 860px so the links never get cramped */
+@media (max-width: 860px) {
+    .nav__toggle {
+        display: flex;
+    }
+
+    .nav__menu {
+        position: absolute;
+        top: var(--nav-height);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 4px;
+        margin-left: 0;
+        padding: 12px var(--gutter) 24px;
+        background: var(--white);
+        box-shadow: 0 18px 30px -20px rgba(51, 51, 51, 0.4);
+        /* Hidden until the hamburger is clicked */
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: opacity 0.3s ease, transform 0.3s var(--ease), visibility 0.3s;
+    }
+
+    .nav__menu.is-open {
+        visibility: visible;
+        opacity: 1;
+        transform: none;
+    }
+
+    .nav__link {
+        padding: 12px 16px;
+        font-size: 1rem;
+    }
+
+    /* The current section's dot sits on the right of its row */
+    .nav__link::after {
+        left: auto;
+        right: 16px;
+        bottom: 50%;
+        margin: 0 0 -2.5px;
+    }
+}
+
+/* Small tablet / large phone */
+@media (max-width: 768px) {
+    .hero {
+        min-height: auto;
+    }
+
+    .hero__inner {
+        grid-template-columns: 1fr;
+    }
+
+    /* Skills: the three cards stacked in one column */
+    .skills {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+    }
+
+    .skill-group--design {
+        grid-row: auto;
+    }
+
+    /* Photo above the text on small screens */
+    .hero__photo {
+        order: -1;
+    }
+
+    .photo-frame {
+        width: min(80%, 320px);
+    }
+
+    /* Keep only the soft background glows: the shapes would crowd a small screen */
+    .hero__dots,
+    .about__dots,
+    .skills__ring {
+        display: none;
+    }
+}
+
+/* Mobile (phones, 640px and narrower)
+   Goal: a compact page with the same spacing rhythm in every section.
+   Shared spacing on phones:
+     56px  top and bottom padding of every section (--section-space)
+     24px  where every section label lands below the navbar after a nav click
+     10px  section label -> section title
+     28px  section title -> section content */
+@media (max-width: 640px) {
+    :root {
+        --gutter: 20px;
+        --section-space: 56px;
+        --nav-height: 68px;
+        --radius: 18px;
+    }
+
+    /* --- Shared section spacing --- */
+
+    /* Every section (Projects included) lands its label 24px below the navbar.
+       This replaces the 40px desktop rule above. */
+    .section:not(.hero) {
+        scroll-margin-top: calc(24px - var(--section-space));
+    }
+
+    .section__head {
+        margin-bottom: 28px;
+    }
+
+    .section__label {
+        margin-bottom: 10px;
+    }
+
+    .shape--ring {
+        width: 200px;
+        height: 200px;
+    }
+
+    /* --- Home --- */
+    .hero {
+        padding: 28px 0 var(--section-space);
+    }
+
+    .hero__ring {
+        top: -70px;
+        left: -70px;
+    }
+
+    /* Order on phones: photo, Hello I'm, name, title, intro, button
+       (the photo is moved above the text by ".hero__photo { order: -1 }" at 768px) */
+    .hero__inner {
+        gap: 28px;
+    }
+
+    /* Smaller photo so the View My Projects button fits on the first screen */
+    .photo-frame {
+        width: min(52%, 210px);
+    }
+
+    .photo-frame img {
+        padding: 4px;
+    }
+
+    /* Decorative green arch and warm pink outline sit closer to the smaller photo */
+    .photo-frame::before {
+        transform: translate(-12px, -12px);
+    }
+
+    .photo-frame::after {
+        transform: translate(14px, 14px);
+    }
+
+    .hero__greeting {
+        margin-bottom: 12px;
+        font-size: 0.6875rem;
+    }
+
+    .hero__name {
+        margin-bottom: 14px;
+        font-size: 2.875rem;
+    }
+
+    .hero__title {
+        margin-bottom: 14px;
+        font-size: 1.375rem;
+    }
+
+    .hero__intro {
+        margin-bottom: 24px;
+    }
+
+    .btn--hero {
+        padding: 15px 30px;
+        font-size: 0.8125rem;
+    }
+
+    /* --- About Me --- */
+    .about__grid {
+        gap: 16px;
+    }
+
+    .about__intro {
+        padding: 24px 22px;
+    }
+
+    .about__lead {
+        font-size: 1.375rem;
+    }
+
+    .about__body {
+        gap: 14px;
+    }
+
+    .about__card {
+        padding: 20px;
+    }
+
+    .about__card:hover {
+        transform: none;
+    }
+
+    .about__card-title {
+        gap: 12px;
+        margin-bottom: 10px;
+        font-size: 1.375rem;
+    }
+
+    .about__card-title .icon-badge {
+        width: 36px;
+        height: 36px;
+        font-size: 0.875rem;
+    }
+
+    /* --- Projects --- */
+    .project__desc {
+        margin-bottom: 20px;
+    }
+
+    .project__subhead {
+        margin: 24px 0 10px;
+    }
+
+    .project__features {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-bottom: 24px;
+    }
+
+    /* Mobile project order: label, title, description, tags, SCREENSHOT,
+       key features, button. "display: contents" lets the details' parts be
+       reordered together with the screenshot without changing the HTML. */
+    .project {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        padding: 26px 20px 24px;
+    }
+
+    .project__main {
+        display: contents;
+    }
+
+    .project__category {
+        align-self: flex-start;   /* the pill keeps its own width */
+        font-size: 0.6875rem;
+    }
+
+    .project__media {
+        order: 1;
+        align-self: stretch;   /* full width (desktop centers it vertically instead) */
+        margin: 24px 0 0;
+    }
+
+    .project__subhead,
+    .project__features,
+    .project .btn,
+    .project__note {
+        order: 2;
+    }
+
+    .project .btn {
+        align-self: flex-start;   /* keep the button its normal width */
+    }
+
+    /* --- Skills: the three cards stacked, kept compact --- */
+    .skills {
+        gap: 12px;
+    }
+
+    .skill-group {
+        padding: 18px 14px;
+    }
+
+    .skill-group__title {
+        margin-bottom: 14px;
+        font-size: 1.5rem;
+    }
+
+    .skill-group__title::after {
+        margin-top: 8px;
+    }
+
+    .skill-list {
+        gap: 8px;
+    }
+
+    .skill-item {
+        gap: 12px;
+        padding: 10px 12px;
+    }
+
+    .skill-item__icon {
+        width: 34px;
+        height: 34px;
+        font-size: 0.875rem;
+    }
+
+    .skill-item__name {
+        font-size: 0.9375rem;
+    }
+
+    .skill-item__desc {
+        margin-top: 1px;
+        font-size: 0.8125rem;
+        line-height: 1.45;
+    }
+
+    /* Technical becomes 2 x 2 so "HTML & CSS" and its two logos have room */
+    .logo-grid {
+        gap: 8px;
+    }
+
+    .logo-grid--4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .logo-tile {
+        gap: 8px;
+        padding: 12px 6px 10px;
+    }
+
+    .logo-tile__logos img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .logo-tile__name {
+        font-size: 0.8125rem;
+    }
+
+    .skill-group:hover {
+        translate: none;
+    }
+
+    /* --- Certificates: a swipeable carousel, one card at a time ---
+       The row reaches the screen edges (negative margins), and each card is 86%
+       wide, so the edge of the next card peeks in to show there is more. */
+    .certificates {
+        display: flex;
+        gap: 12px;
+        position: relative;              /* lets main.js measure each card's position */
+        margin: 0 calc(-1 * var(--gutter));
+        padding: 4px var(--gutter) 20px; /* room below, so the card shadows are not cut off */
+        overflow-x: auto;                /* only this row scrolls sideways, not the page */
+        scroll-snap-type: x mandatory;   /* a swipe always stops exactly on a card */
+        scroll-padding: 0 var(--gutter); /* cards stop lined up with the page text */
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;           /* hide the scrollbar (Firefox) */
+    }
+
+    .certificates::-webkit-scrollbar {
+        display: none;                   /* hide the scrollbar (Chrome, Edge, Safari) */
+    }
+
+    .certificate {
+        flex: 0 0 86%;                   /* one card plus a peek of the next */
+        scroll-snap-align: start;
+        padding: 18px 16px 14px;
+    }
+
+    /* Inside the carousel, cards are always visible (no fade-in) and do not lift,
+       because the carousel would cut off the lifted card */
+    .js .certificates .reveal {
+        opacity: 1;
+        transform: none;
+    }
+
+    .certificate:hover {
+        translate: none;
+        box-shadow: var(--shadow);
+    }
+
+    /* Position dots under the carousel (display only, not buttons) */
+    .carousel-dots {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 0;
+    }
+
+    .carousel-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        background: var(--green);
+        transition: width 0.3s var(--ease), background-color 0.3s ease;
+    }
+
+    /* The dot for the certificate on screen becomes a longer pink bar */
+    .carousel-dot.is-active {
+        width: 20px;
+        background: var(--pink);
+    }
+
+    .certificate__top {
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .certificate__top .icon-badge {
+        width: 34px;
+        height: 34px;
+        font-size: 0.8125rem;
+    }
+
+    .certificate__title {
+        min-height: 0;   /* no reserved second line needed in one column */
+        margin-bottom: 4px;
+        font-size: 1.25rem;
+    }
+
+    .certificate__issuer {
+        margin-bottom: 10px;
+        font-size: 0.875rem;
+    }
+
+    /* Date on the left, button on the right, on one row */
+    .certificate__footer {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 10px;
+    }
+
+    .certificate__date {
+        font-size: 0.9375rem;
+        white-space: nowrap;
+    }
+
+    .certificate .btn--outline {
+        flex-shrink: 0;
+        padding: 8px 12px;   /* about 36px tall: compact but easy to tap */
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+    }
+
+    /* --- Contact --- */
+    /* Same idea as on desktop, for the 24px landing spot and the taller phone footer (120px) */
+    #contact {
+        min-height: calc(100vh - var(--nav-height) - 24px + var(--section-space) - 120px);
+    }
+
+    .contact__layout {
+        gap: 24px;
+    }
+
+    .contact__heading .section__head {
+        margin-bottom: 16px;
+    }
+
+    .contact__details {
+        gap: 12px;
+    }
+
+    .contact__item {
+        padding: 16px 16px 16px 66px;
+    }
+
+    .contact__item:hover {
+        transform: none;
+    }
+
+    .contact__details .icon-badge {
+        top: 16px;
+        left: 14px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .contact__details dd {
+        font-size: 1.25rem;
+    }
+
+    /* --- Popups --- */
+    .modal {
+        width: calc(100vw - 24px);
+    }
+
+    .modal__box {
+        padding: 14px 14px 12px;
+    }
+
+    .modal__title {
+        font-size: 1.125rem;
+    }
+
+    .modal__pdf {
+        height: 65vh;
+    }
+
+    .modal__links {
+        justify-content: center;
+    }
+
+    .modal--image {
+        width: fit-content;
+    }
+
+    .modal__image {
+        max-width: calc(100vw - 24px);
+    }
+
+    /* --- Footer --- */
+    .site-footer {
+        padding: 24px 0;
+    }
+
+    .site-footer__inner {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}
+
+
+/* 15. Reduced motion
+   Respects the "reduce motion" setting on the visitor's device. */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+
+    .js .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}

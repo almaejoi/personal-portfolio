@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<!--
+    Almejoy C. Ancero, personal portfolio. Plain HTML, CSS, and JavaScript.
+    All the website's text is in this file. To change something, edit it here and save.
+    Styles are in css/style.css and scripts are in js/main.js.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Almejoy C. Ancero, aspiring Web Developer & UI/UX designer and BSCS student.">
+    <title>Almejoy C. Ancero | Aspiring UI/UX Designer</title>
+    <!-- Fonts: Cormorant Garamond (headings) + Inter (body text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Runs early so the fade-in animation never causes a flash of content -->
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+    <!-- All the site's icons, kept in one place. Show one anywhere with:
+         <svg class="icon" aria-hidden="true"><use href="#icon-mail"></use></svg>
+         Color and size come from css/style.css ("Icons" in section 3). -->
+    <svg class="icon-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <!-- General -->
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+    <symbol id="icon-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></symbol>
+    <!-- About Me -->
+    <symbol id="icon-graduate" viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></symbol>
+    <symbol id="icon-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></symbol>
+    <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+    <symbol id="icon-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8z"/></symbol>
+    <!-- Skills -->
+    <symbol id="icon-design" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></symbol>
+    <symbol id="icon-creative" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.8-1.7H17a4 4 0 0 0 4-4c0-4.4-4-8.2-9-8.2z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></symbol>
+    <symbol id="icon-technical" viewBox="0 0 24 24"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></symbol>
+    <symbol id="icon-tools" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+    <!-- Contact -->
+    <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="icon-social" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98"/><path d="M15.41 6.51l-6.82 3.98"/></symbol>
+    <symbol id="icon-facebook" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></symbol>
+    <symbol id="icon-instagram" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></symbol>
+    <symbol id="icon-linkedin" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></symbol>
+    <symbol id="icon-github" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.75c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol>
+    <!-- Design skills -->
+    <symbol id="icon-ui" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></symbol>
+    <symbol id="icon-wireframe" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="icon-layout" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></symbol>
+    </svg>
+
+    <!-- Lets keyboard users jump past the navigation -->
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" id="site-header">
+        <nav class="nav container" aria-label="Main navigation">
+            <a href="#home" class="nav__logo" aria-label="Almejoy C. Ancero, back to top">AJ</a>
+            <button class="nav__toggle" id="nav-toggle" type="button"
+                    aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+                <span class="nav__toggle-bar"></span>
+                <span class="nav__toggle-bar"></span>
+            </button>
+            <ul class="nav__menu" id="nav-menu">
+                <li><a href="#home" class="nav__link">Home</a></li>
+                <li><a href="#about" class="nav__link">About Me</a></li>
+                <li><a href="#projects" class="nav__link">Projects</a></li>
+                <li><a href="#skills" class="nav__link">Skills</a></li>
+                <li><a href="#certificates" class="nav__link">Certificates</a></li>
+                <li><a href="#contact" class="nav__link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main">
+
+<!-- ===================== 01 HOME ===================== -->
+<section class="hero section" id="home">
+    <!-- Decorative shapes only (no content) -->
+    <span class="shape shape--ring hero__ring" aria-hidden="true"></span>
+    <span class="shape shape--dots hero__dots" aria-hidden="true"></span>
+    <div class="container hero__inner">
+        <div class="hero__text reveal">
+            <p class="hero__greeting">Hello, I'm</p>
+            <h1 class="hero__name">Almejoy C.<br><em>Ancero</em></h1>
+            <!-- The <span> carries the pink highlight, so it follows the text line by line -->
+            <p class="hero__title"><span class="hero__title-text">Aspiring Web Developer &amp; UI/UX Designer</span></p>
+            <p class="hero__intro">
+                A BSCS student exploring web development and
+                creating visually appealing, user-friendly
+                digital experiences.
+            </p>
+            <a href="#projects" class="btn btn--hero">
+                View My Projects
+                <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+            </a>
+        </div>
+        <div class="hero__photo reveal">
+            <div class="photo-frame">
+                <!-- To change the photo: put the new file in the images folder and change the file name below -->
+                <img src="images/alme.png"
+                     alt="Portrait of Almejoy C. Ancero" width="440" height="560">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 02 ABOUT ===================== -->
+<section class="section section--blush" id="about">
+    <span class="shape shape--dots about__dots" aria-hidden="true"></span>
+    <div class="container">
+        <header class="section__head reveal">
+            <p class="section__label">About Me</p>
+            <h2 class="section__title">Designing with <em>care</em> and curiosity.</h2>
+        </header>
+        <div class="about__grid reveal">
+            <!-- Dark card: who I am -->
+            <div class="about__intro">
+                <p class="about__lead">
+                    I'm a fourth-year Bachelor of Science in Computer Science (BSCS)
+                    student at Biliran Province State University (BiPSU), School of
+                    Technology and Computer Studies.
+                </p>
+            </div>
+            <!-- One small card per paragraph -->
+            <div class="about__body">
+                <article class="about__card">
+                    <h3 class="about__card-title">
+                        My Journey
+                    </h3>
+                    <p>
+                        As I continue my journey in technology, I'm still exploring the
+                        different opportunities that this field has to offer. Among the
+                        things I've discovered, I particularly enjoy <strong>UI/UX design</strong>, where
+                        I can express my creativity through designing interfaces and
+                        creating user-friendly experiences.
+                    </p>
+                </article>
+                <article class="about__card about__card--pink">
+                    <h3 class="about__card-title">
+                        Outside Academics
+                    </h3>
+                    <p>
+                        Outside academics, I enjoy watching anime, BL, K-dramas, C-dramas,
+                        and other kinds of shows. I'm also a K-pop fan, especially of <strong>NCT</strong>.
+                        I love exploring different stories, discovering new content, and
+                        supporting the artists I admire.
+                    </p>
+                </article>
+                <article class="about__card">
+                    <h3 class="about__card-title">
+                        What's Next
+                    </h3>
+                    <p>
+                        I'm still figuring out where my Computer Science journey will take
+                        me, but I'm open to learning, trying new things, and discovering
+                        where my interests can lead.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 03 PROJECTS ===================== -->
+<section class="section section--green" id="projects">
+    <span class="shape shape--ring projects__ring" aria-hidden="true"></span>
+    <div class="container">
+        <header class="section__head reveal">
+            <p class="section__label">Projects</p>
+            <h2 class="section__title">Selected <em>work</em>.</h2>
+        </header>
+        <!-- To add a project: copy the whole <li class="project"> block below and edit the copy.
+             To add a screenshot: put the file in images/projects/, then copy the <a class="project__shot"> block.
+             "width" and "height" are the image's real size in pixels (Windows: right-click the file,
+             Properties, Details). They reserve the right space so the page does not jump.
+             The first screenshot is shown large. -->
+        <ol class="projects">
+            <li class="project reveal">
+                <!-- Left: screenshot -->
+                <div class="project__media">
+                    <!-- The real screenshot shown on the screen of the laptop mockup (images/laptop.png).
+                         main.js tilts the screenshot to match the screen's angle, using the four screen corners
+                         below, measured in laptop.png's own pixels: top-left, top-right, bottom-right, bottom-left.
+                         Clicking opens a larger view in the image popup (see main.js).
+                         Without JavaScript, the link simply opens the image. -->
+                    <a href="images/projects/debttracker.png" class="project__shot laptop" data-image-modal
+                       aria-label="Enlarge screenshot: Debt Tracker System home page with login and register buttons">
+                        <span class="laptop__screen" data-laptop-screen
+                              data-corners="134.73,62.8 400.55,72.13 424.34,241.8 151.03,263.6">
+                            <img src="images/projects/debttracker.png" alt="Debt Tracker System home page with login and register buttons"
+                                 width="1897" height="911" loading="lazy">
+                        </span>
+                        <img class="laptop__frame" src="images/laptop.png" alt="" width="670" height="373">
+                    </a>
+                </div>
+
+                <!-- Right: project details -->
+                <div class="project__main">
+                    <p class="project__category">
+                        Academic Project
+                    </p>
+                    <h3 class="project__title">Debt Tracker System</h3>
+                    <p class="project__desc">A web-based application developed to help sari-sari store owners organize debt records, monitor outstanding balances, and manage customer payments.</p>
+                    <ul class="tags" aria-label="Technologies used">
+                        <li>Python</li>
+                        <li>Django</li>
+                        <li>HTML</li>
+                        <li>CSS</li>
+                        <li>JavaScript</li>
+                        <li>SQLite</li>
+                    </ul>
+                    <h4 class="project__subhead">Key Features</h4>
+                    <ul class="project__features">
+                        <li><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg>Creditor and debtor accounts</li>
+                        <li><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg>Debt recording and monitoring</li>
+                        <li><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg>Payment tracking and balance calculation</li>
+                        <li><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg>Cash and GCash payment options</li>
+                        <li><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg>Transaction history</li>
+                        <li><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg>Role-based dashboards</li>
+                    </ul>
+                    <!-- When you have a real project link, replace this button and the note below with:
+                         <a href="YOUR-LINK-HERE" class="btn" target="_blank" rel="noopener">View Project</a> -->
+                    <button type="button" class="btn" disabled>View Project</button>
+                    <p class="project__note">Project link coming soon</p>
+                </div>
+            </li>
+
+            <li class="project reveal">
+                <!-- Left: the web dashboard on the laptop and the mobile app on the phone, both in
+                     images/laptop2.png. main.js tilts each screenshot onto its screen using the four
+                     screen corners below, measured in laptop2.png's own pixels
+                     (top-left, top-right, bottom-right, bottom-left).
+                     Each screenshot opens larger in the image popup when clicked. -->
+                <div class="project__media">
+                    <div class="mockup" data-mockup>
+                        <a href="images/projects/zirenl.jpg" class="project__shot mockup__laptop" data-image-modal
+                           aria-label="Enlarge screenshot: Ziren web dashboard showing the incident map">
+                            <span class="mockup__screen mockup__screen--laptop" data-laptop-screen data-screen-size="400,250"
+                                  data-corners="110.26,53.7 364.15,61.74 383.74,243.7 130.48,264.21">
+                                <img src="images/projects/zirenl.jpg" alt="Ziren web dashboard showing the incident map"
+                                     width="1920" height="1020" loading="lazy">
+                            </span>
+                        </a>
+                        <img class="mockup__frame" src="images/laptop2.png" alt="" width="612" height="383">
+                        <a href="images/projects/zirenm.jpg" class="project__shot mockup__phone" data-image-modal
+                           aria-label="Enlarge screenshot: Ziren mobile app home screen">
+                            <span class="mockup__screen mockup__screen--phone" data-laptop-screen data-screen-size="300,726"
+                                  data-corners="72.69,166.5 139.28,164.12 131.36,332.64 65.18,327.57">
+                                <img src="images/projects/zirenm.jpg" alt="Ziren mobile app home screen"
+                                     width="720" height="1600" loading="lazy">
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right: project details -->
+                <div class="project__main">
+                    <p class="project__category">Academic Research Project</p>
+                    <h3 class="project__title">Ziren: Emergency Response for Biliran</h3>
+                    <p class="project__role"><span>Role:</span> Assistant Researcher</p>
+                    <p class="project__desc">Ziren is a web and mobile-based emergency response system designed to help residents in Biliran report emergencies and assist responders in managing and prioritizing incoming incidents.</p>
+                <!--<p class="project__desc">Residents can submit emergency reports through a mobile application, while responders can review incidents through a web dashboard. The system uses AI and machine learning to analyze reports and suggest incident classifications and severity levels. These suggestions remain advisory until validated by a responder before dispatch.</p>-->
+                    <ul class="tags" aria-label="Project type">
+                        <li>Web Dashboard</li>
+                        <li>Mobile Application</li>
+                        <li>Artificial Intelligence</li>
+                        <li>Machine Learning</li>
+                    </ul>
+                </div>
+            </li>
+        </ol>
+    </div>
+</section>
+
+<!-- ===================== 04 SKILLS ===================== -->
+<section class="section section--dark" id="skills">
+    <span class="shape shape--ring skills__ring" aria-hidden="true"></span>
+    <div class="container">
+        <header class="section__head reveal">
+            <p class="section__label"> Skills</p>
+            <h2 class="section__title">What I <em>bring</em> to the table.</h2>
+        </header>
+        <!-- Design: a line icon, the skill name and a short description for each skill.
+             Every "#icon-..." name must exist in the icon list at the top of this file.
+             Tools and Technical: each official logo (images/logos/) with its name below it. -->
+        <div class="skills">
+            <div class="skill-group skill-group--design reveal">
+                <h3 class="skill-group__title">Design</h3>
+                <ul class="skill-list">
+                    <li class="skill-item">
+                        <span class="skill-item__icon"><svg class="icon" aria-hidden="true"><use href="#icon-ui"></use></svg></span>
+                        <span class="skill-item__text">
+                            <span class="skill-item__name">User Interface Design</span>
+                            <span class="skill-item__desc">Creating clean and user-friendly digital interfaces.</span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__icon"><svg class="icon" aria-hidden="true"><use href="#icon-wireframe"></use></svg></span>
+                        <span class="skill-item__text">
+                            <span class="skill-item__name">Wireframing</span>
+                            <span class="skill-item__desc">Planning the structure and layout of website or app screens.</span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__icon"><svg class="icon" aria-hidden="true"><use href="#icon-creative"></use></svg></span>
+                        <span class="skill-item__text">
+                            <span class="skill-item__name">Color Theory</span>
+                            <span class="skill-item__desc">Combining colors to create visually balanced designs.</span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__icon"><svg class="icon" aria-hidden="true"><use href="#icon-layout"></use></svg></span>
+                        <span class="skill-item__text">
+                            <span class="skill-item__name">Layout Design</span>
+                            <span class="skill-item__desc">Arranging visual elements in an organized and readable way.</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="skill-group reveal">
+                <h3 class="skill-group__title">Tools</h3>
+                <ul class="logo-grid logo-grid--3">
+                    <li class="logo-tile">
+                        <span class="logo-tile__logos"><img src="images/logos/canva.png" alt="" width="44" height="44"></span>
+                        <span class="logo-tile__name">Canva</span>
+                    </li>
+                    <li class="logo-tile">
+                        <span class="logo-tile__logos"><img src="images/logos/drawio.svg" alt="" width="44" height="44"></span>
+                        <span class="logo-tile__name">Draw.io</span>
+                    </li>
+                    <li class="logo-tile">
+                        <span class="logo-tile__logos"><img src="images/logos/vscode.svg" alt="" width="44" height="44"></span>
+                        <span class="logo-tile__name">VS Code</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="skill-group reveal">
+                <h3 class="skill-group__title">Technical</h3>
+                <ul class="logo-grid logo-grid--4">
+                    <li class="logo-tile">
+                        <span class="logo-tile__logos">
+                            <img src="images/logos/html5.svg" alt="" width="44" height="44">
+                            <img src="images/logos/css3.svg" alt="" width="44" height="44">
+                        </span>
+                        <span class="logo-tile__name">HTML &amp; CSS</span>
+                    </li>
+                    <li class="logo-tile">
+                        <span class="logo-tile__logos"><img src="images/logos/javascript.png" alt="" width="44" height="44"></span>
+                        <span class="logo-tile__name">JavaScript</span>
+                    </li>
+                    <li class="logo-tile">
+                        <span class="logo-tile__logos"><img src="images/logos/python.svg" alt="" width="44" height="44"></span>
+                        <span class="logo-tile__name">Python</span>
+                    </li>
+                    <li class="logo-tile">
+                        <span class="logo-tile__logos"><img src="images/logos/django.svg" alt="" width="44" height="44"></span>
+                        <span class="logo-tile__name">Django</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 05 CERTIFICATES ===================== -->
+<section class="section section--rose" id="certificates">
+    <span class="shape shape--dots certificates__dots" aria-hidden="true"></span>
+    <div class="container">
+        <header class="section__head reveal">
+            <p class="section__label"> Certificates</p>
+            <h2 class="section__title">Learning <em>milestones</em>.</h2>
+        </header>
+        <!-- On phones this list becomes a swipeable carousel (style.css section 14, main.js section 5) -->
+        <!-- To add a certificate: put the PDF in the certificates folder, copy one <li class="certificate">
+             block and edit the copy, then add one more <span class="carousel-dot"> in the dots below.
+             View Certificate opens the PDF in a popup (main.js); without JavaScript it opens in a new tab. -->
+        <ul class="certificates" id="certificate-track" aria-label="Certificates">
+            <li class="certificate reveal">
+                <div class="certificate__top">
+                    <span class="icon-badge icon-badge--pink">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-award"></use></svg>
+                    </span>
+                    <p class="certificate__type">Certificate of Completion</p>
+                </div>
+                <h3 class="certificate__title">Introduction to AI Literacy and Responsible Use</h3>
+                <p class="certificate__issuer">Micro-credentials course</p>
+                <div class="certificate__footer">
+                    <time class="certificate__date" datetime="2026-09-14">September 14, 2026</time>
+                    <a href="certificates/ai-literacy.pdf" class="btn btn--outline" target="_blank" rel="noopener"
+                       data-pdf-modal data-title="Introduction to AI Literacy and Responsible Use"
+                       aria-label="View certificate: Introduction to AI Literacy and Responsible Use">View Certificate</a>
+                </div>
+            </li>
+            <li class="certificate reveal">
+                <div class="certificate__top">
+                    <span class="icon-badge icon-badge--pink">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-award"></use></svg>
+                    </span>
+                    <p class="certificate__type">Certificate of Participation</p>
+                </div>
+                <h3 class="certificate__title">Integrated OS – Be More Digi-TALINO</h3>
+                <p class="certificate__issuer">Integrated Office Solutions, Inc.</p>
+                <div class="certificate__footer">
+                    <time class="certificate__date" datetime="2025-09-05">September 5, 2025</time>
+                    <a href="certificates/be-more-digitalino.pdf" class="btn btn--outline" target="_blank" rel="noopener"
+                       data-pdf-modal data-title="Integrated OS – Be More Digi-TALINO"
+                       aria-label="View certificate: Integrated OS – Be More Digi-TALINO">View Certificate</a>
+                </div>
+            </li>
+            <li class="certificate reveal">
+                <div class="certificate__top">
+                    <span class="icon-badge icon-badge--pink">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-award"></use></svg>
+                    </span>
+                    <p class="certificate__type">Certificate of Completion</p>
+                </div>
+                <h3 class="certificate__title">Networking Basics</h3>
+                <p class="certificate__issuer">Cisco Networking Academy</p>
+                <div class="certificate__footer">
+                    <time class="certificate__date" datetime="2026-05-22">May 22, 2026</time>
+                    <a href="certificates/networking-basics.pdf" class="btn btn--outline" target="_blank" rel="noopener"
+                       data-pdf-modal data-title="Networking Basics"
+                       aria-label="View certificate: Networking Basics">View Certificate</a>
+                </div>
+            </li>
+        </ul>
+        <!-- Position dots under the carousel: phones only, for display (not buttons) -->
+        <div class="carousel-dots" aria-hidden="true">
+            <span class="carousel-dot" data-carousel-dot></span>
+            <span class="carousel-dot" data-carousel-dot></span>
+            <span class="carousel-dot" data-carousel-dot></span>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 06 CONTACT ===================== -->
+<section class="section section--mixed" id="contact">
+    <span class="shape shape--ring contact__ring" aria-hidden="true"></span>
+    <!-- Heading and intro on the left, contact details on the right -->
+    <div class="container contact__layout">
+        <div class="contact__heading reveal">
+            <header class="section__head">
+                <p class="section__label"> Contact</p>
+                <h2 class="section__title">Let's create something <em>meaningful</em>.</h2>
+            </header>
+            <p class="contact__intro">
+                Have a project, an internship opportunity, or just want to
+                say hello? My inbox is always open.
+            </p>
+        </div>
+        <div class="contact reveal">
+            <dl class="contact__details">
+                <div class="contact__item">
+                    <dt>
+                        <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#icon-mail"></use></svg></span>
+                        Email
+                    </dt>
+                    <dd><a href="mailto:almejoyancero@gmail.com">almejoyancero@gmail.com</a></dd>
+                </div>
+                <div class="contact__item">
+                    <dt>
+                        <span class="icon-badge icon-badge--pink"><svg class="icon" aria-hidden="true"><use href="#icon-pin"></use></svg></span>
+                        Location
+                    </dt>
+                    <dd>Naval, Biliran, Philippines</dd>
+                </div>
+                <div class="contact__item">
+                    <dt>
+                        <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#icon-social"></use></svg></span>
+                        Social
+                    </dt>
+                    <dd>
+                        <!-- To show GitHub: copy the Facebook <li> below, then use your profile URL, the name GitHub,
+                             and the icon #icon-github. -->
+                        <ul class="contact__socials">
+                            <li>
+                                <a href="https://www.facebook.com/alme.ancero" target="_blank" rel="noopener noreferrer"
+                                   aria-label="Facebook (opens in a new tab)">
+                                    <svg class="icon" aria-hidden="true"><use href="#icon-facebook"></use></svg>
+                                    Facebook
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.instagram.com/telmiejoy/" target="_blank" rel="noopener noreferrer"
+                                   aria-label="Instagram (opens in a new tab)">
+                                    <svg class="icon" aria-hidden="true"><use href="#icon-instagram"></use></svg>
+                                    Instagram
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/almejoy-ancero-222856449" target="_blank" rel="noopener noreferrer"
+                                   aria-label="LinkedIn (opens in a new tab)">
+                                    <svg class="icon" aria-hidden="true"><use href="#icon-linkedin"></use></svg>
+                                    LinkedIn
+                                </a>
+                            </li>
+                        </ul>
+                    </dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== POPUPS (filled in by main.js) ===================== -->
+<!-- Certificate PDF popup -->
+<dialog class="modal modal--pdf" id="pdf-modal" aria-labelledby="pdf-modal-title">
+    <div class="modal__box">
+        <div class="modal__header">
+            <h2 class="modal__title" id="pdf-modal-title">Certificate</h2>
+            <button type="button" class="modal__close" data-modal-close aria-label="Close certificate">&times;</button>
+        </div>
+        <!-- Computers and tablets: the browser's own PDF viewer -->
+        <iframe class="modal__pdf" title="Certificate PDF"></iframe>
+        <!-- Phones: the certificate drawn as a picture that fits the popup's width (main.js) -->
+        <canvas class="modal__preview" width="842" height="595" role="img" aria-label="Certificate" hidden></canvas>
+        <!-- Shown instead when the certificate cannot be displayed inside the page -->
+        <div class="modal__fallback" hidden>
+            <p>This browser can't show PDF files inside the page.</p>
+            <a class="btn" data-pdf-open target="_blank" rel="noopener">Open PDF</a>
+        </div>
+        <p class="modal__links">
+            <a data-pdf-open target="_blank" rel="noopener">Open in new tab</a>
+        </p>
+    </div>
+</dialog>
+<!-- Project screenshot popup -->
+<dialog class="modal modal--image" id="image-modal" aria-label="Project screenshot">
+    <div class="modal__box">
+        <button type="button" class="modal__close" data-modal-close aria-label="Close screenshot">&times;</button>
+        <!-- main.js adds the enlarged <img> here -->
+    </div>
+</dialog>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p>&copy; <span id="current-year">2026</span> Almejoy C. Ancero</p>
+            <a href="#home" class="site-footer__top">Back to top &uarr;</a>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
