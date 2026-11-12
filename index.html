@@ -15,8 +15,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <!-- Runs early so the fade-in animation never causes a flash of content -->
-    <script>document.documentElement.classList.add('js');</script>
+    <!-- Runs early, before the page is drawn:
+         1. the "js" class, so the fade-in animation never causes a flash of content
+         2. the saved light/dark theme (or the device's setting on a first visit),
+            so the page never flashes the wrong colors. The toggle is in main.js, section 8. -->
+    <script>
+        (function () {
+            var root = document.documentElement;
+            root.classList.add('js');
+            var theme;
+            try { theme = localStorage.getItem('theme'); } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
 <body>
     <!-- All the site's icons, kept in one place. Show one anywhere with:
@@ -27,7 +41,10 @@
     <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></symbol>
     <symbol id="icon-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
     <symbol id="icon-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></symbol>
-    <!-- About Me -->
+    <!-- Theme toggle -->
+    <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></symbol>
+    <!-- About Me --> 
     <symbol id="icon-graduate" viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></symbol>
     <symbol id="icon-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></symbol>
     <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
@@ -55,13 +72,10 @@
     <a class="skip-link" href="#main">Skip to content</a>
 
     <header class="site-header" id="site-header">
-        <nav class="nav container" aria-label="Main navigation">
-            <a href="#home" class="nav__logo" aria-label="Almejoy C. Ancero, back to top">AJ</a>
-            <button class="nav__toggle" id="nav-toggle" type="button"
-                    aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
-                <span class="nav__toggle-bar"></span>
-                <span class="nav__toggle-bar"></span>
-            </button>
+        <!-- A rounded bar centered near the top of the page: logo, links, then the
+             theme toggle (and, on phones, the menu button) -->
+        <nav class="nav" aria-label="Main navigation">
+            <a href="#home" class="nav__logo" aria-label="Almie, back to top">Almie<span class="nav__dot" aria-hidden="true">.</span></a>
             <ul class="nav__menu" id="nav-menu">
                 <li><a href="#home" class="nav__link">Home</a></li>
                 <li><a href="#about" class="nav__link">About Me</a></li>
@@ -70,6 +84,18 @@
                 <li><a href="#certificates" class="nav__link">Certificates</a></li>
                 <li><a href="#contact" class="nav__link">Contact</a></li>
             </ul>
+            <div class="nav__actions">
+                <!-- Dark / light mode: the moon shows in light mode, the sun in dark mode -->
+                <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode">
+                    <svg class="icon theme-toggle__moon" aria-hidden="true"><use href="#icon-moon"></use></svg>
+                    <svg class="icon theme-toggle__sun" aria-hidden="true"><use href="#icon-sun"></use></svg>
+                </button>
+                <button class="nav__toggle" id="nav-toggle" type="button"
+                        aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+                    <span class="nav__toggle-bar"></span>
+                    <span class="nav__toggle-bar"></span>
+                </button>
+            </div>
         </nav>
     </header>
 
@@ -84,17 +110,23 @@
         <div class="hero__text reveal">
             <p class="hero__greeting">Hello, I'm</p>
             <h1 class="hero__name">Almejoy C.<br><em>Ancero</em></h1>
-            <!-- The <span> carries the pink highlight, so it follows the text line by line -->
+            <!-- The <span> carries the green highlight, so it follows the text line by line -->
             <p class="hero__title"><span class="hero__title-text">Aspiring Web Developer &amp; UI/UX Designer</span></p>
             <p class="hero__intro">
                 A BSCS student exploring web development and
                 creating visually appealing, user-friendly
                 digital experiences.
             </p>
-            <a href="#projects" class="btn btn--hero">
-                View My Projects
-                <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
-            </a>
+            <div class="hero__actions">
+                <a href="#projects" class="btn btn--hero">
+                    View My Projects
+                    <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+                </a>
+                <a href="#contact" class="btn btn--hero btn--ghost">
+                    Contact Me
+                    <svg class="icon" aria-hidden="true"><use href="#icon-mail"></use></svg>
+                </a>
+            </div>
         </div>
         <div class="hero__photo reveal">
             <div class="photo-frame">
@@ -114,22 +146,17 @@
             <p class="section__label">About Me</p>
             <h2 class="section__title">Designing with <em>care</em> and curiosity.</h2>
         </header>
+        <!-- Three matching cards: side by side on desktop, stacked on tablets and phones -->
         <div class="about__grid reveal">
-            <!-- Dark card: who I am -->
-            <div class="about__intro">
-                <p class="about__lead">
-                    I'm a fourth-year Bachelor of Science in Computer Science (BSCS)
-                    student at Biliran Province State University (BiPSU), School of
-                    Technology and Computer Studies.
-                </p>
-            </div>
-            <!-- One small card per paragraph -->
             <div class="about__body">
                 <article class="about__card">
                     <h3 class="about__card-title">
                         My Journey
                     </h3>
                     <p>
+                        I'm a fourth-year Bachelor of Science in Computer Science (BSCS)
+                        student at Biliran Province State University (BiPSU), School of
+                        Technology and Computer Studies.
                         As I continue my journey in technology, I'm still exploring the
                         different opportunities that this field has to offer. Among the
                         things I've discovered, I particularly enjoy <strong>UI/UX design</strong>, where
@@ -137,7 +164,7 @@
                         creating user-friendly experiences.
                     </p>
                 </article>
-                <article class="about__card about__card--pink">
+                <article class="about__card">
                     <h3 class="about__card-title">
                         Outside Academics
                     </h3>
@@ -338,7 +365,7 @@
             </div>
             <div class="skill-group reveal">
                 <h3 class="skill-group__title">Technical</h3>
-                <ul class="logo-grid logo-grid--4">
+                <ul class="logo-grid logo-grid--3">
                     <li class="logo-tile">
                         <span class="logo-tile__logos">
                             <img src="images/logos/html5.svg" alt="" width="44" height="44">
@@ -353,10 +380,6 @@
                     <li class="logo-tile">
                         <span class="logo-tile__logos"><img src="images/logos/python.svg" alt="" width="44" height="44"></span>
                         <span class="logo-tile__name">Python</span>
-                    </li>
-                    <li class="logo-tile">
-                        <span class="logo-tile__logos"><img src="images/logos/django.svg" alt="" width="44" height="44"></span>
-                        <span class="logo-tile__name">Django</span>
                     </li>
                 </ul>
             </div>
@@ -379,7 +402,7 @@
         <ul class="certificates" id="certificate-track" aria-label="Certificates">
             <li class="certificate reveal">
                 <div class="certificate__top">
-                    <span class="icon-badge icon-badge--pink">
+                    <span class="icon-badge icon-badge--soft">
                         <svg class="icon" aria-hidden="true"><use href="#icon-award"></use></svg>
                     </span>
                     <p class="certificate__type">Certificate of Completion</p>
@@ -395,7 +418,7 @@
             </li>
             <li class="certificate reveal">
                 <div class="certificate__top">
-                    <span class="icon-badge icon-badge--pink">
+                    <span class="icon-badge icon-badge--soft">
                         <svg class="icon" aria-hidden="true"><use href="#icon-award"></use></svg>
                     </span>
                     <p class="certificate__type">Certificate of Participation</p>
@@ -411,7 +434,7 @@
             </li>
             <li class="certificate reveal">
                 <div class="certificate__top">
-                    <span class="icon-badge icon-badge--pink">
+                    <span class="icon-badge icon-badge--soft">
                         <svg class="icon" aria-hidden="true"><use href="#icon-award"></use></svg>
                     </span>
                     <p class="certificate__type">Certificate of Completion</p>
@@ -461,7 +484,7 @@
                 </div>
                 <div class="contact__item">
                     <dt>
-                        <span class="icon-badge icon-badge--pink"><svg class="icon" aria-hidden="true"><use href="#icon-pin"></use></svg></span>
+                        <span class="icon-badge icon-badge--soft"><svg class="icon" aria-hidden="true"><use href="#icon-pin"></use></svg></span>
                         Location
                     </dt>
                     <dd>Naval, Biliran, Philippines</dd>

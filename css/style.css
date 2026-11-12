@@ -21,29 +21,69 @@
 
 /* 1. Design tokens
    Change a color here and it updates everywhere on the site.
-   The site uses ONLY these four colors, plus white and one dark neutral for text.
-   Green is the main color; pink is the accent.
-   None of the four colors is dark enough to be readable as text (all are below 2.5:1
-   on white), so every piece of text uses --text (#333333), which is readable on all of them.
-   Shadows, lines and see-through overlays are these same colors made partly transparent.
-   Colored glows use color-mix() with the variables below, so they follow any change
-   to these values automatically instead of keeping an old copy of the color. */
-:root {
-    /* The approved palette */
-    --green: #A8DF8E;          /* primary green: main identity, primary buttons, highlights */
-    --mint: #BDEFC6;           /* light mint green: light backgrounds, section accents, decoration */
-    --soft-pink: #F9D9E3;      /* soft pink: pink backgrounds, cards, subtle highlights */
-    --pink: #FFAAB8;           /* accent pink: pink buttons, icons, hover effects, accents */
+   The site is built from ONE five-green palette (--p1 darkest ... --p5 lightest).
+   Every other color below is one of those greens, or a green mixed with white or
+   with the darkest green, so the whole site stays one family of colors.
+   The rest of the stylesheet only uses the named roles (--bg, --surface, --accent, ...).
+   Each role has a light-mode value (:root) and a dark-mode value ([data-theme="dark"]),
+   so the theme toggle switches the whole site at once. */
+   :root {
+    /* The palette */
+    --p1: #132519;             /* deepest green: text in light mode, page in dark mode */
+    --p2: #355935;             /* forest green: buttons, navbar, feature cards */
+    --p3: #5D8C55;             /* mid green: secondary accents */
+    --p4: #73A767;             /* leaf green: decoration, rings, dots */
+    --p5: #93BE89;             /* sage green: highlights, light tints */
 
-    /* Neutrals */
-    --white: #FFFFFF;          /* neutral backgrounds and card surfaces */
-    --text: #333333;           /* all text */
-    --line: rgba(51, 51, 51, 0.12);
+    /* ---- Light mode ---- */
+    color-scheme: light;
 
-    /* Soft neutral shadows, and a pink glow for hover */
-    --shadow: 0 18px 40px -22px rgba(51, 51, 51, 0.3);
-    --shadow-lift: 0 28px 56px -24px rgba(51, 51, 51, 0.38);
-    --shadow-pink: 0 22px 44px -20px color-mix(in srgb, var(--pink) 60%, transparent);
+    /* Backgrounds, from lightest to most colored */
+    --bg: color-mix(in srgb, var(--p5) 7%, #FFFFFF);           /* page */
+    --bg-alt: color-mix(in srgb, var(--p5) 20%, #FFFFFF);      /* tinted sections */
+    --bg-strong: color-mix(in srgb, var(--p5) 38%, #FFFFFF);   /* Skills section */
+    --surface: #FFFFFF;                                        /* cards */
+    --surface-alt: color-mix(in srgb, var(--p5) 16%, #FFFFFF); /* tags, items inside cards */
+    --surface-alt-2: color-mix(in srgb, var(--p5) 34%, #FFFFFF);
+
+    /* Text and lines */
+    --text: var(--p1);
+    --line: color-mix(in srgb, var(--p2) 16%, transparent);
+    --card-border: color-mix(in srgb, var(--p3) 24%, transparent);   /* outlines every card */
+
+    /* Accents */
+    --accent: var(--p2);            /* buttons, active states */
+    --accent-hover: var(--p1);
+    --on-accent: #FFFFFF;           /* text and icons on --accent */
+    --accent-soft: var(--p4);       /* decoration */
+    --accent-2: var(--p3);          /* second accent */
+    --feature-bg: var(--p2);        /* dark green blocks: About intro card, footer */
+    --on-feature: #FFFFFF;
+
+    /* Highlighter strokes behind words, and the soft background glows */
+    --highlight: color-mix(in srgb, var(--p5) 60%, transparent);
+    --highlight-strong: color-mix(in srgb, var(--p4) 60%, transparent);
+    --glow: color-mix(in srgb, var(--p5) 45%, transparent);
+    --glow-2: color-mix(in srgb, var(--p5) 30%, transparent);
+
+    /* Navbar */
+    --nav-bg: color-mix(in srgb, var(--p2) 95%, transparent);
+    --nav-border: color-mix(in srgb, var(--p5) 30%, transparent);
+    --nav-text: color-mix(in srgb, var(--p5) 14%, #FFFFFF);
+    --nav-hover: rgba(255, 255, 255, 0.12);
+    --nav-active-bg: var(--p5);
+    --nav-active-text: var(--p1);
+
+    /* Behind the skill logos (only used in dark mode, so the logos keep their own colors) */
+    --logo-plate: transparent;
+
+    /* Shadows: the deepest green, partly transparent */
+    --shadow-color: rgba(19, 37, 25, 0.28);
+    --shadow: 0 18px 40px -22px rgba(19, 37, 25, 0.28);
+    --shadow-lift: 0 28px 56px -24px rgba(19, 37, 25, 0.36);
+    --shadow-glow: 0 22px 44px -20px color-mix(in srgb, var(--p3) 55%, transparent);
+    --drop: rgba(19, 37, 25, 0.18);
+    --backdrop: rgba(19, 37, 25, 0.75);
 
     --font-serif: 'Cormorant Garamond', Georgia, serif;
     --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -51,10 +91,52 @@
     --container: 1160px;
     --gutter: 32px;
     --section-space: 120px;
-    --nav-height: 80px;
+    --nav-height: 80px;      /* the whole header: the rounded bar plus the space around it */
     --radius: 22px;
 
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---- Dark mode: the deepest green as the page, lighter greens for text and accents ---- */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --bg: var(--p1);
+    --bg-alt: color-mix(in srgb, var(--p2) 22%, var(--p1));
+    --bg-strong: color-mix(in srgb, var(--p2) 30%, var(--p1));
+    /* Cards are clearly lighter than the page; items inside cards are lighter again */
+    --surface: color-mix(in srgb, var(--p2) 72%, var(--p1));
+    --surface-alt: color-mix(in srgb, var(--p3) 35%, var(--p2));
+    --surface-alt-2: color-mix(in srgb, var(--p3) 65%, var(--p2));
+
+    --text: color-mix(in srgb, var(--p5) 14%, #FFFFFF);
+    --line: color-mix(in srgb, var(--p5) 20%, transparent);
+    --card-border: color-mix(in srgb, var(--p5) 26%, transparent);
+
+    --accent: var(--p5);
+    --accent-hover: color-mix(in srgb, var(--p5) 70%, #FFFFFF);
+    --on-accent: var(--p1);
+    --accent-soft: var(--p3);
+    --accent-2: var(--p4);
+    --feature-bg: var(--p2);
+    --on-feature: color-mix(in srgb, var(--p5) 14%, #FFFFFF);
+
+    --highlight: color-mix(in srgb, var(--p3) 75%, transparent);
+    --highlight-strong: color-mix(in srgb, var(--p3) 90%, transparent);
+    --glow: color-mix(in srgb, var(--p2) 55%, transparent);
+    --glow-2: color-mix(in srgb, var(--p2) 40%, transparent);
+
+    --nav-bg: color-mix(in srgb, var(--p2) 60%, var(--p1));
+    --nav-border: color-mix(in srgb, var(--p5) 22%, transparent);
+
+    --logo-plate: color-mix(in srgb, var(--p5) 14%, #FFFFFF);
+
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.55);
+    --shadow-lift: 0 28px 56px -24px rgba(0, 0, 0, 0.65);
+    --shadow-glow: 0 22px 44px -20px color-mix(in srgb, var(--p4) 40%, transparent);
+    --drop: rgba(0, 0, 0, 0.35);
+    --backdrop: rgba(8, 16, 11, 0.82);
 }
 
 
@@ -73,7 +155,7 @@ html {
 
 body {
     margin: 0;
-    background: var(--white);
+    background: var(--bg);
     color: var(--text);
     font-family: var(--font-sans);
     font-size: 1rem;
@@ -110,12 +192,11 @@ ul, ol {
     list-style: none;
 }
 
-/* Emphasized words in headings: dark text over a green highlighter stroke
-   (the palette greens are too light to be readable as text on their own) */
+/* Emphasized words in headings: the text color over a green highlighter stroke */
 em {
     font-style: italic;
     color: var(--text);
-    background: linear-gradient(transparent 72%, var(--green) 72%, var(--green) 88%, transparent 88%);
+    background: linear-gradient(transparent 72%, var(--highlight) 72%, var(--highlight) 88%, transparent 88%);
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
 }
@@ -134,8 +215,8 @@ em {
     z-index: 200;
     padding: 10px 18px;
     border-radius: 999px;
-    background: var(--green);
-    color: var(--text);
+    background: var(--accent);
+    color: var(--on-accent);
     text-decoration: none;
     font-size: 0.875rem;
 }
@@ -171,40 +252,39 @@ em {
     scroll-margin-top: calc(40px - var(--section-space));
 }
 
-/* Section backgrounds: green and white, so the page feels like one piece.
-   Hero = mint and white, About = white into mint, Projects = mint,
-   Skills = solid green, Certificates = white with a green glow,
-   Contact = mint into white with soft pink at the far end, Footer = solid green.
+/* Section backgrounds: light and tinted greens alternate, so the page feels like one piece.
+   Hero = tint and page color, About = page color into tint, Projects = tint,
+   Skills = the strongest tint, Certificates = page color with a soft glow,
+   Contact = tint into page color, Footer = solid forest green.
+   Every value is a theme role, so each section also switches in dark mode.
    (The class names are kept from earlier designs so index.html does not change.) */
 .section--blush {
-    background: linear-gradient(180deg, var(--white), var(--mint));
+    background: linear-gradient(180deg, var(--bg), var(--bg-alt));
 }
 
 .section--green {
-    background: var(--mint);
+    background: var(--bg-alt);
 }
 
 .section--rose {
     background:
-        radial-gradient(38rem 26rem at 100% 0%, color-mix(in srgb, var(--mint) 90%, transparent), transparent 70%),
-        var(--white);
+        radial-gradient(38rem 26rem at 100% 0%, var(--bg-alt), transparent 70%),
+        var(--bg);
 }
 
-/* Green and pink mixed directly turn a muddy grey-brown, so this gradient
-   passes through white before the soft pink at the far end */
 .section--mixed {
-    background: linear-gradient(135deg, var(--mint), var(--white) 50%, var(--white) 72%, var(--soft-pink));
+    background: linear-gradient(135deg, var(--bg-alt), var(--bg) 50%, var(--bg) 72%, var(--bg-alt));
 }
 
-/* Solid green section (used for Skills) */
+/* The most colored section (used for Skills) */
 .section--dark {
-    background: var(--green);
+    background: var(--bg-strong);
     color: var(--text);
 }
 
-/* On the green background, the heading's highlighter stroke is soft pink instead */
+/* On the stronger background, the heading's highlighter stroke is a deeper green */
 .section--dark em {
-    background-image: linear-gradient(transparent 72%, var(--soft-pink) 72%, var(--soft-pink) 88%, transparent 88%);
+    background-image: linear-gradient(transparent 72%, var(--highlight-strong) 72%, var(--highlight-strong) 88%, transparent 88%);
 }
 
 /* Decorative shapes: placed per section, always behind the content */
@@ -216,16 +296,16 @@ em {
 .shape--ring {
     width: 320px;
     height: 320px;
-    border: 1px solid var(--green);
+    border: 1px solid var(--accent-soft);
     border-radius: 50%;
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
-/* Dots are green by default; the hero keeps a pink set as a small accent */
+/* Dotted pattern in the decoration green */
 .shape--dots {
     width: 180px;
     height: 180px;
-    background-image: radial-gradient(var(--green) 1.5px, transparent 1.5px);
+    background-image: radial-gradient(var(--accent-soft) 1.5px, transparent 1.5px);
     background-size: 18px 18px;
     opacity: 0.35;
 }
@@ -251,7 +331,7 @@ em {
     color: var(--text);
 }
 
-/* Short green line with a pink tip between the number and label */
+/* Short green line with a lighter tip between the number and label */
 .section__label span::after {
     content: '';
     display: inline-block;
@@ -259,12 +339,12 @@ em {
     height: 2px;
     margin-left: 14px;
     vertical-align: middle;
-    background: linear-gradient(90deg, var(--green) 65%, var(--pink) 65%);
+    background: linear-gradient(90deg, var(--p3) 65%, var(--p5) 65%);
 }
 
-/* On the green Skills background the line is white with a pink tip */
+/* On the Skills background the line is deeper green with a light tip */
 .section--dark .section__label span::after {
-    background: linear-gradient(90deg, var(--white) 65%, var(--pink) 65%);
+    background: linear-gradient(90deg, var(--accent) 65%, var(--p5) 65%);
 }
 
 .section__title {
@@ -272,8 +352,8 @@ em {
     font-size: clamp(2.25rem, 4.5vw, 3.5rem);
 }
 
-/* Buttons: green with dark text (white text would be unreadable on this green).
-   Hover turns them accent pink with a soft pink glow. */
+/* Buttons: forest green with white text (light mode) or sage green with
+   dark text (dark mode). Hover deepens the color and adds a soft green glow. */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -282,8 +362,8 @@ em {
     padding: 15px 32px;
     border: 0;
     border-radius: 999px;
-    background: var(--green);
-    color: var(--text);
+    background: var(--accent);
+    color: var(--on-accent);
     font-family: var(--font-sans);
     font-size: 0.8125rem;
     font-weight: 600;
@@ -292,13 +372,14 @@ em {
     text-decoration: none;
     cursor: pointer;
     box-shadow: var(--shadow);
-    transition: background-color 0.35s ease, box-shadow 0.35s var(--ease),
+    transition: background-color 0.35s ease, color 0.35s ease, box-shadow 0.35s var(--ease),
                 transform 0.35s var(--ease);
 }
 
 .btn:hover {
-    background: var(--pink);
-    box-shadow: var(--shadow-pink);
+    background: var(--accent-hover);
+    color: var(--on-accent);
+    box-shadow: var(--shadow-glow);
     transform: translateY(-2px);
 }
 
@@ -316,10 +397,24 @@ em {
     font-size: 0.875rem;
 }
 
+/* Outlined version of the main button (Contact Me, next to View My Projects).
+   It fills in with the button color on hover. */
+.btn--ghost {
+    background: transparent;
+    color: var(--accent);
+    box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+.btn--ghost:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+    box-shadow: inset 0 0 0 1.5px var(--accent), var(--shadow-glow);
+}
+
 /* Lighter outline version (used on certificate cards) */
 .btn--outline {
     padding: 11px 22px;
-    border: 1.5px solid var(--green);
+    border: 1.5px solid var(--accent);
     background: transparent;
     color: var(--text);
     font-size: 0.75rem;
@@ -329,8 +424,8 @@ em {
 }
 
 .btn--outline:hover {
-    background: var(--soft-pink);
-    border-color: var(--pink);
+    background: var(--surface-alt-2);
+    border-color: var(--accent);
     color: var(--text);
     box-shadow: none;
     transform: translateY(-2px);
@@ -340,7 +435,7 @@ em {
 .btn:disabled,
 .btn:disabled:hover {
     opacity: 0.5;
-    background: var(--green);
+    background: var(--accent);
     box-shadow: none;
     transform: none;
     cursor: not-allowed;
@@ -352,11 +447,11 @@ em {
     gap: 8px;
 }
 
-/* Technology tags alternate mint and green */
+/* Technology tags alternate two light greens */
 .tags li {
     padding: 5px 14px;
     border-radius: 999px;
-    background: var(--mint);
+    background: var(--surface-alt);
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.04em;
@@ -364,7 +459,7 @@ em {
 }
 
 .tags li:nth-child(even) {
-    background: var(--green);
+    background: var(--surface-alt-2);
 }
 
 /* Icons: drawn with lines, in the color of the surrounding text */
@@ -392,110 +487,150 @@ em {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--green);
-    color: var(--white);
+    background: var(--accent);
+    color: var(--on-accent);
     font-size: 1rem;
 }
 
-.icon-badge--pink {
-    background: var(--pink);
-    color: var(--white);
+/* Light green circle with a deep green icon */
+.icon-badge--soft {
+    background: var(--surface-alt-2);
+    color: var(--accent);
 }
 
-/* White circle with a pink icon, for green backgrounds */
+/* Card-colored circle with a green icon, for green backgrounds */
 .icon-badge--glass {
-    background: var(--white);
-    color: var(--pink);
+    background: var(--surface);
+    color: var(--accent);
 }
 
 
-/* 4. Navigation */
+/* 4. Navigation
+   A rounded bar floating near the top, centered on the page.
+   The header itself is see-through and lets clicks pass; only the bar is clickable. */
 .site-header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.9);   /* white, slightly see-through */
+    display: flex;
+    align-items: center;
+    height: var(--nav-height);
+    /* Takes no room in the page, so the hero's background runs up behind the bar */
+    margin-bottom: calc(-1 * var(--nav-height));
+    padding: 0 var(--gutter);
+    pointer-events: none;
+}
+
+.nav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    width: fit-content;
+    max-width: 100%;
+    height: calc(var(--nav-height) - 22px);
+    margin: 0 auto;
+    padding: 0 10px 0 28px;
+    border: 1px solid var(--nav-border);
+    border-radius: 999px;
+    background: var(--nav-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 1px 0 transparent;
+    box-shadow: 0 14px 32px -20px var(--shadow-color);
+    pointer-events: auto;
     transition: box-shadow 0.3s ease;
 }
 
 /* Added by JavaScript once the page is scrolled */
-.site-header.is-scrolled {
-    box-shadow: 0 10px 30px -18px rgba(51, 51, 51, 0.35);
-}
-
-.nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: var(--nav-height);
+.site-header.is-scrolled .nav {
+    box-shadow: 0 18px 38px -16px var(--shadow-color);
 }
 
 .nav__logo {
     font-family: var(--font-serif);
-    font-size: 1.875rem;
+    font-size: 1.625rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    line-height: 1;
+    letter-spacing: 0.02em;
     text-decoration: none;
-    color: var(--text);
+    color: var(--nav-text);
 }
 
 .nav__dot {
-    color: var(--pink);
+    color: var(--p5);
 }
 
-/* The links fill the space after the logo and are spread evenly across it,
-   starting a comfortable distance away from the logo */
 .nav__menu {
     display: flex;
-    flex: 1;
-    justify-content: space-evenly;
-    gap: 8px;
-    margin-left: 72px;
+    align-items: center;
+    gap: 4px;
 }
 
-/* A mint pill on hover, a green pill for the current section,
-   which also gets a small white dot */
+/* A faint pill on hover, a sage pill for the current section */
 .nav__link {
-    position: relative;
     display: block;
-    padding: 8px 18px;
+    padding: 8px 16px;
     border-radius: 999px;
     font-size: 0.875rem;
-    letter-spacing: 0.03em;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
     text-decoration: none;
-    color: var(--text);
+    color: var(--nav-text);
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.nav__link::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: 2px;
-    width: 5px;
-    height: 5px;
-    margin-left: -2.5px;
-    border-radius: 50%;
-    background: var(--white);
-    transform: scale(0);
-    transition: transform 0.4s var(--ease);
-}
-
 .nav__link:hover {
-    background: var(--mint);
-    color: var(--text);
+    background: var(--nav-hover);
+    color: var(--nav-text);
 }
 
 .nav__link.is-active {
-    background: var(--green);
-    color: var(--text);
+    background: var(--nav-active-bg);
+    color: var(--nav-active-text);
 }
 
-.nav__link.is-active::after {
-    transform: scale(1);
+/* Theme toggle and (on phones) the menu button, on the right of the bar */
+.nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--nav-border);
+    border-radius: 50%;
+    background: var(--nav-hover);
+    color: var(--nav-text);
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--nav-active-bg);
+    color: var(--nav-active-text);
+}
+
+.theme-toggle .icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Moon in light mode (switch to dark), sun in dark mode (switch to light) */
+.theme-toggle__sun,
+[data-theme="dark"] .theme-toggle__moon {
+    display: none;
+}
+
+[data-theme="dark"] .theme-toggle__sun {
+    display: block;
 }
 
 /* Hamburger button: hidden on desktop */
@@ -504,19 +639,20 @@ em {
     flex-direction: column;
     justify-content: center;
     gap: 7px;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     padding: 0 10px;
     border: 0;
+    border-radius: 50%;
     background: none;
-    color: var(--text);
+    color: var(--nav-text);
     cursor: pointer;
 }
 
 .nav__toggle-bar {
     display: block;
     height: 1.5px;
-    background: var(--text);
+    background: var(--nav-text);
     transition: transform 0.35s var(--ease);
 }
 
@@ -533,15 +669,15 @@ em {
 .hero {
     display: flex;
     align-items: center;
-    min-height: calc(100vh - var(--nav-height));
-    padding: 72px 0 112px;
-    /* Base only: mint on the left, through white, back to mint on the right.
+    min-height: 100vh;
+    /* The navbar floats over the top of the hero, so the content starts below it */
+    padding: calc(72px + var(--nav-height)) 0 112px;
+    /* Base only: tint on the left, through the page color, back to tint on the right.
        Stronger color comes from the two glows below. */
-    background: linear-gradient(105deg, var(--mint), var(--white) 46%, var(--white) 56%, var(--mint));
+    background: linear-gradient(105deg, var(--bg-alt), var(--bg) 46%, var(--bg) 56%, var(--bg-alt));
 }
 
-/* Green glow in the lower-left corner and a mint glow in the upper-right.
-   (A pink glow here would mix with the green into beige, so pink stays in the small details.) */
+/* Soft green glows in the lower-left and upper-right corners */
 .hero::before,
 .hero::after {
     content: '';
@@ -555,7 +691,7 @@ em {
     bottom: -30%;
     width: 44vw;
     height: 44vw;
-    background: radial-gradient(closest-side, color-mix(in srgb, var(--green) 60%, transparent), transparent);
+    background: radial-gradient(closest-side, var(--glow), transparent);
 }
 
 .hero::after {
@@ -563,7 +699,7 @@ em {
     top: -26%;
     width: 34vw;
     height: 34vw;
-    background: radial-gradient(closest-side, color-mix(in srgb, var(--mint) 70%, transparent), transparent);
+    background: radial-gradient(closest-side, var(--glow-2), transparent);
 }
 
 .hero__ring {
@@ -574,7 +710,7 @@ em {
 .hero__dots {
     right: 3%;
     bottom: 6%;
-    background-image: radial-gradient(var(--pink) 1.5px, transparent 1.5px);
+    background-image: radial-gradient(var(--accent-2) 1.5px, transparent 1.5px);
 }
 
 .hero__inner {
@@ -595,20 +731,19 @@ em {
     color: var(--text);
 }
 
-/* Both lines of the name are italic, so "Almejoy C." matches "Ancero" */
+/* The name: upright (not italic) Cormorant Garamond, slightly bolder for presence */
 .hero__name {
     margin-bottom: 28px;
     font-size: clamp(3.25rem, 7.4vw, 6.5rem);
-    font-style: italic;
-    font-weight: 500;
-    line-height: 0.98;
-    letter-spacing: -0.01em;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.005em;
 }
 
-/* "Ancero" gets the same green highlighter stroke as the other emphasized words */
+/* "Ancero" keeps the green highlighter stroke, but stays upright like the rest of the name */
 .hero__name em {
-    /* Extra room so the stroke covers the end of the slanted last letter */
-    padding-right: 0.08em;
+    font-style: normal;
 }
 
 .hero__title {
@@ -621,12 +756,12 @@ em {
     color: var(--text);
 }
 
-/* Soft pink highlighter stroke behind the title text.
+/* Light green highlighter stroke behind the title text.
    It sits on an inline <span>, so it starts at "Aspiring", ends at "Designer",
    and when the title wraps, each line gets its own stroke under its own words.
    "clone" makes every line's stroke a complete piece. */
 .hero__title-text {
-    background: linear-gradient(transparent 55%, var(--soft-pink) 55%, var(--soft-pink) 90%, transparent 90%);
+    background: linear-gradient(transparent 55%, var(--highlight) 55%, var(--highlight) 90%, transparent 90%);
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
 }
@@ -638,13 +773,20 @@ em {
     color: var(--text);
 }
 
+/* View My Projects and Contact Me, side by side (they wrap on very narrow screens) */
+.hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
 .hero__photo {
     display: flex;
     justify-content: center;
 }
 
 /* Arch-shaped photo with a green border and two decorations behind it:
-   a solid green arch (top left) and an accent pink outline (bottom right). */
+   a solid green arch (top left) and a green outline (bottom right). */
 .photo-frame {
     position: relative;
     width: min(100%, 420px);
@@ -662,12 +804,12 @@ em {
 }
 
 .photo-frame::before {
-    background: var(--green);
+    background: var(--accent-soft);
     transform: translate(-18px, -18px);
 }
 
 .photo-frame::after {
-    border: 2px solid var(--pink);
+    border: 2px solid var(--accent-2);
     transform: translate(22px, 22px);
 }
 
@@ -678,7 +820,7 @@ em {
     padding: 6px;   /* the gradient background shows through as a border */
     object-fit: cover;
     border-radius: 999px 999px 32px 32px;
-    background: linear-gradient(160deg, var(--green) 40%, var(--mint));
+    background: linear-gradient(160deg, var(--accent-soft) 40%, var(--p5));
     box-shadow: var(--shadow-lift);
 }
 
@@ -692,81 +834,72 @@ em {
 
 
 /* 6. About
-   A green introduction card on the left, three smaller cards on the right. */
+   Three matching cards (My Journey, Outside Academics, What's Next).
+   Desktop: My Journey across the top, the other two side by side below it
+   (see the desktop-only block right after these rules).
+   Tablets and phones: one column (section 14). */
 .about__dots {
     top: 48px;
     right: 4%;
 }
 
-.about__grid {
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    align-items: start;
-    gap: 32px;
-}
-
-.about__intro {
-    position: relative;
-    overflow: hidden;
-    padding: 44px 40px;
-    border-radius: var(--radius);
-    background: var(--green);
-    box-shadow: var(--shadow-lift);
-}
-
-/* White ring in the corner of the green card */
-.about__intro::after {
-    content: '';
-    position: absolute;
-    right: -60px;
-    top: -60px;
-    width: 150px;     /* small enough to stay in the corner, clear of the text */
-    height: 150px;
-    border: 1px solid var(--white);
-    border-radius: 50%;
-    opacity: 0.8;
-}
-
-/* No top margin: the card no longer has an icon above the text,
-   so the card's own padding spaces the text evenly at the top and bottom */
-.about__lead {
-    position: relative;
-    z-index: 1;
-    margin: 0;
-    font-family: var(--font-serif);
-    font-size: clamp(1.5rem, 2.4vw, 2rem);
-    line-height: 1.35;
-    color: var(--text);
-}
-
 .about__body {
     display: grid;
-    gap: 20px;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 28px;
     color: var(--text);
 }
 
+/* Desktop only (993px and wider; tablets and phones keep their one-column layout).
+   My Journey is wide and on top; Outside Academics (left) and What's Next (right)
+   share the row below and stretch to the same height. Titles are centered. */
+@media (min-width: 993px) {
+    .about__body {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about__card:first-child {
+        grid-column: 1 / -1;
+    }
+
+    .about__card-title {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+/* Card: outlined, with a green stripe along the top */
 .about__card {
-    padding: 28px 32px;
-    border-left: 4px solid var(--green);
+    position: relative;
+    overflow: hidden;
+    padding: 34px 30px 32px;
+    border: 1px solid var(--card-border);
     border-radius: var(--radius);
-    background: var(--white);
+    background: var(--surface);
     box-shadow: var(--shadow);
-    transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+    transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s ease;
+}
+
+.about__card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--p3) 78%, var(--p5) 78%);
 }
 
 .about__card:hover {
-    transform: translateX(6px);
+    transform: translateY(-4px);
+    border-color: var(--accent-soft);
     box-shadow: var(--shadow-lift);
-}
-
-/* The personal card gets the one soft pink accent in this section */
-.about__card--pink {
-    border-left-color: var(--pink);
-    background: var(--soft-pink);
 }
 
 .about__card p {
     margin: 0;
+    line-height: 1.75;
 }
 
 .about__card strong {
@@ -778,8 +911,9 @@ em {
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 14px;
-    font-size: 1.625rem;
+    margin-bottom: 16px;
+    font-size: 1.75rem;
+    font-weight: 600;
 }
 
 
@@ -788,7 +922,6 @@ em {
 .projects__ring {
     top: -100px;
     right: -80px;
-    border-color: var(--green);
 }
 
 .project {
@@ -800,11 +933,11 @@ em {
     padding: 48px;
     overflow: hidden;
     border-radius: calc(var(--radius) + 6px);
-    background: var(--white);
+    background: var(--surface);
     box-shadow: var(--shadow-lift);
 }
 
-/* Green stripe with a pink tip along the top of the card */
+/* Green stripe with a light tip along the top of the card */
 .project::before {
     content: '';
     position: absolute;
@@ -812,7 +945,7 @@ em {
     left: 0;
     right: 0;
     height: 5px;
-    background: linear-gradient(90deg, var(--green), var(--mint) 82%, var(--pink) 82%);
+    background: linear-gradient(90deg, var(--p2), var(--p4) 82%, var(--p5) 82%);
 }
 
 /* Center the screenshot beside the (taller) project details on desktop */
@@ -841,7 +974,7 @@ em {
     max-width: none;
     height: auto;
     pointer-events: none;
-    filter: drop-shadow(0 18px 18px rgba(51, 51, 51, 0.16));
+    filter: drop-shadow(0 18px 18px var(--drop));
     transition: filter 0.5s var(--ease);
 }
 
@@ -873,7 +1006,7 @@ em {
 }
 
 .project:hover .laptop__frame {
-    filter: drop-shadow(0 22px 20px color-mix(in srgb, var(--pink) 45%, transparent));
+    filter: drop-shadow(0 22px 20px color-mix(in srgb, var(--p4) 45%, transparent));
 }
 
 /* Space between project cards */
@@ -904,7 +1037,7 @@ em {
     max-width: none;
     height: auto;
     pointer-events: none;
-    filter: drop-shadow(0 18px 18px rgba(51, 51, 51, 0.16));
+    filter: drop-shadow(0 18px 18px var(--drop));
     transition: filter 0.5s var(--ease);
 }
 
@@ -979,7 +1112,7 @@ em {
 }
 
 .project:hover .mockup__frame {
-    filter: drop-shadow(0 22px 20px color-mix(in srgb, var(--pink) 45%, transparent));
+    filter: drop-shadow(0 22px 20px color-mix(in srgb, var(--p4) 45%, transparent));
 }
 
 /* "Role: Assistant Researcher" label under the project title */
@@ -988,7 +1121,7 @@ em {
     margin: -4px 0 20px;
     padding: 5px 14px;
     border-radius: 999px;
-    background: var(--soft-pink);
+    background: var(--surface-alt-2);
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--text);
@@ -1021,7 +1154,7 @@ em {
 .project__shots img {
     width: 100%;
     height: auto;
-    background: var(--white);
+    background: var(--surface);
 }
 
 /* The main screenshot keeps its original shape;
@@ -1049,14 +1182,14 @@ em {
     overflow: hidden;
     border: 1px solid var(--line);
     border-radius: 14px;
-    background: var(--white);
+    background: var(--surface);
     box-shadow: var(--shadow);
     transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
 }
 
 .project:hover .shot-placeholder {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-pink);
+    box-shadow: var(--shadow-glow);
 }
 
 .shot-placeholder__bar {
@@ -1064,18 +1197,18 @@ em {
     gap: 6px;
     padding: 11px 14px;
     border-bottom: 1px solid var(--line);
-    background: var(--mint);
+    background: var(--bg-alt);
 }
 
 .shot-placeholder__bar span {
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    background: var(--green);
+    background: var(--accent-soft);
 }
 
 .shot-placeholder__bar span:first-child {
-    background: var(--pink);
+    background: var(--accent-2);
 }
 
 .shot-placeholder__text {
@@ -1096,7 +1229,7 @@ em {
     margin-bottom: 16px;
     padding: 5px 16px 5px 6px;
     border-radius: 999px;
-    background: var(--mint);
+    background: var(--surface-alt);
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.14em;
@@ -1109,9 +1242,9 @@ em {
     margin-right: 8px;
     padding: 2px 9px;
     border-radius: 999px;
-    background: var(--green);
+    background: var(--accent);
     letter-spacing: 0.04em;
-    color: var(--text);
+    color: var(--on-accent);
 }
 
 .project__title {
@@ -1157,7 +1290,7 @@ em {
     height: 18px;
     margin-top: 2px;
     stroke-width: 2.5;
-    color: var(--green);
+    color: var(--accent);
 }
 
 .project__note {
@@ -1167,15 +1300,22 @@ em {
 }
 
 
+/* Same subtle outline on the other large cards, so every card stands out from
+   the page background in both themes */
+.project,
+.certificate,
+.contact__item {
+    border: 1px solid var(--card-border);
+}
+
+
 /* 8. Skills
-   Three mint cards on the green background. Design (the longest, with descriptions)
+   Three cards on the tinted green background. Design (the longest, with descriptions)
    fills the left column; Tools and Technical are stacked on the right, so both
    columns end at about the same height. */
 .skills__ring {
     top: -90px;
     right: 8%;
-    border-color: var(--white);
-    opacity: 0.6;
 }
 
 /* Tools takes only the height it needs; Technical fills the rest,
@@ -1193,19 +1333,19 @@ em {
 
 .skill-group {
     padding: 28px 26px;
-    border: 1.5px solid transparent;
+    border: 1.5px solid var(--card-border);
     border-radius: var(--radius);
-    background: var(--mint);
+    background: var(--surface);
     box-shadow: var(--shadow);
 }
 
 .skill-group:hover {
     translate: 0 -4px;
-    border-color: var(--pink);
+    border-color: var(--accent-soft);
     box-shadow: var(--shadow-lift);
 }
 
-/* Card title with a short pink line under it */
+/* Card title with a short green line under it */
 .skill-group__title {
     margin: 0 0 22px;
     font-size: 1.75rem;
@@ -1218,10 +1358,10 @@ em {
     height: 3px;
     margin-top: 10px;
     border-radius: 3px;
-    background: var(--pink);
+    background: var(--accent-2);
 }
 
-/* Design skills: a line icon in a soft pink circle, the name, and a smaller description */
+/* Design skills: a line icon in a light green circle, the name, and a smaller description */
 .skill-list {
     display: grid;
     gap: 12px;
@@ -1233,14 +1373,14 @@ em {
     gap: 14px;
     padding: 14px 16px;
     border-radius: 16px;
-    background: var(--white);
+    background: var(--surface-alt);
     transition: transform 0.3s var(--ease), box-shadow 0.3s ease;
 }
 
-/* Hover: slides slightly right and shows a pink edge on the left */
+/* Hover: slides slightly right and shows a green edge on the left */
 .skill-item:hover {
     transform: translateX(4px);
-    box-shadow: inset 3px 0 0 var(--pink);
+    box-shadow: inset 3px 0 0 var(--accent-soft);
 }
 
 .skill-item__icon {
@@ -1251,8 +1391,8 @@ em {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--soft-pink);
-    color: var(--text);
+    background: var(--surface);
+    color: var(--accent);
 }
 
 .skill-item__name {
@@ -1269,7 +1409,7 @@ em {
     line-height: 1.5;
 }
 
-/* Tools and Technical: a grid of white tiles, each with the official logo
+/* Tools and Technical: a grid of light tiles, each with the official logo
    (in its own brand colors) centered on top and the name centered below it */
 .logo-grid {
     display: grid;
@@ -1280,16 +1420,18 @@ em {
     grid-template-columns: repeat(3, 1fr);
 }
 
-/* The first Technical tile (HTML & CSS) holds two logos, so its column is wider */
-.logo-grid--4 {
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
-}
-
-/* Laptops and small desktops: the side column is too narrow for four tiles, so 2 x 2.
-   (From 768px down the cards are full width again and four tiles fit.) */
+/* Tools and Technical both have three equal tiles, so they line up with each other.
+   Laptops and small desktops: the side column is narrower, so the logos shrink a
+   little to keep the two "HTML & CSS" logos inside their tile. */
 @media (max-width: 1100px) and (min-width: 769px) {
-    .logo-grid--4 {
-        grid-template-columns: repeat(2, 1fr);
+    .logo-tile__logos img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .logo-tile__name {
+        font-size: 0.8125rem;
+        white-space: nowrap;   /* keeps "HTML & CSS" on one line */
     }
 }
 
@@ -1301,21 +1443,26 @@ em {
     padding: 16px 8px 14px;
     border: 1.5px solid transparent;
     border-radius: 16px;
-    background: var(--white);
+    background: var(--surface-alt);
     text-align: center;
     transition: transform 0.3s var(--ease), border-color 0.3s ease;
 }
 
 .logo-tile:hover {
     transform: translateY(-3px);
-    border-color: var(--pink);
+    border-color: var(--accent-soft);
 }
 
 /* Every logo gets the same 44px square; "contain" keeps its original proportions */
+/* In dark mode the logos sit on a small light plate, so every logo keeps its original
+   colors and stays clearly visible on the green card */
 .logo-tile__logos {
     display: flex;
     justify-content: center;
     gap: 4px;
+    padding: 4px;
+    border-radius: 12px;
+    background: var(--logo-plate);
 }
 
 .logo-tile__logos img {
@@ -1336,7 +1483,6 @@ em {
 .certificates__dots {
     bottom: 40px;
     left: 3%;
-    background-image: radial-gradient(var(--green) 1.5px, transparent 1.5px);
 }
 
 .certificates {
@@ -1353,11 +1499,11 @@ em {
     padding: 32px;
     overflow: hidden;
     border-radius: var(--radius);
-    background: var(--white);
+    background: var(--surface);
     box-shadow: var(--shadow);
 }
 
-/* Green stripe with a pink tip along the top of each card */
+/* Green stripe with a light tip along the top of each card */
 .certificate::before {
     content: '';
     position: absolute;
@@ -1365,13 +1511,13 @@ em {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--green) 78%, var(--pink) 78%);
+    background: linear-gradient(90deg, var(--p3) 78%, var(--p5) 78%);
 }
 
-/* Card lifts gently and gains a pink glow on hover */
+/* Card lifts gently and gains a green glow on hover */
 .certificate:hover {
     translate: 0 -6px;
-    box-shadow: var(--shadow-pink);
+    box-shadow: var(--shadow-glow);
 }
 
 .certificate__top {
@@ -1433,7 +1579,6 @@ em {
 .contact__ring {
     bottom: -120px;
     left: -90px;
-    border-color: var(--green);
 }
 
 /* Contact is the last section, so the page can run out of room to scroll before its
@@ -1473,14 +1618,14 @@ em {
     position: relative;
     padding: 24px 28px 24px 92px;
     border-radius: var(--radius);
-    background: var(--white);
+    background: var(--surface);
     box-shadow: var(--shadow);
     transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
 }
 
 .contact__item:hover {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-pink);
+    box-shadow: var(--shadow-glow);
 }
 
 .contact__details dt {
@@ -1508,16 +1653,16 @@ em {
     overflow-wrap: anywhere;   /* long email addresses wrap instead of overflowing */
 }
 
-/* Email: green underline that thickens and turns pink on hover ("dd > a" = only the email link) */
+/* Email: green underline that thickens and deepens on hover ("dd > a" = only the email link) */
 .contact__details dd > a {
     text-decoration: none;
-    border-bottom: 2px solid var(--green);
+    border-bottom: 2px solid var(--accent-soft);
     transition: border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
 }
 
 .contact__details dd > a:hover {
-    border-bottom-color: var(--pink);
-    box-shadow: 0 2px 0 0 var(--pink);
+    border-bottom-color: var(--accent);
+    box-shadow: 0 2px 0 0 var(--accent);
     color: var(--text);
 }
 
@@ -1528,14 +1673,14 @@ em {
     margin-top: 8px;
 }
 
-/* Social links: green pills with an icon that turn pink on hover */
+/* Social links: light green pills with an icon that deepen on hover */
 .contact__socials a {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     padding: 9px 16px;   /* at least 36px tall, easy to tap */
     border-radius: 999px;
-    background: var(--mint);
+    background: var(--surface-alt);
     font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 500;
@@ -1545,7 +1690,7 @@ em {
 }
 
 .contact__socials a:hover {
-    background: var(--soft-pink);
+    background: var(--surface-alt-2);
     color: var(--text);
     transform: translateY(-2px);
 }
@@ -1555,12 +1700,12 @@ em {
 .site-footer {
     position: relative;
     padding: 36px 0;
-    background: var(--green);
+    background: var(--feature-bg);
     font-size: 0.875rem;
-    color: var(--text);
+    color: var(--on-feature);
 }
 
-/* Mint line with a pink tip along the top of the footer */
+/* Leaf-green line with a light tip along the top of the footer */
 .site-footer::before {
     content: '';
     position: absolute;
@@ -1568,7 +1713,7 @@ em {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--mint) 80%, var(--pink) 80%);
+    background: linear-gradient(90deg, var(--p4) 80%, var(--p5) 80%);
 }
 
 .site-footer__inner {
@@ -1584,16 +1729,16 @@ em {
 
 .site-footer__top {
     padding: 6px 16px;
-    border: 1px solid var(--white);
+    border: 1px solid var(--on-feature);
     border-radius: 999px;
     text-decoration: none;
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .site-footer__top:hover {
-    background: var(--pink);
-    border-color: var(--pink);
-    color: var(--text);
+    background: var(--p5);
+    border-color: var(--p5);
+    color: var(--p1);
 }
 
 
@@ -1611,7 +1756,7 @@ em {
 }
 
 .modal::backdrop {
-    background: rgba(51, 51, 51, 0.7);   /* the dark text color, see-through */
+    background: var(--backdrop);   /* the deepest green, see-through */
 }
 
 /* Fade in when opening; main.js adds "is-closing" to fade out before closing */
@@ -1657,8 +1802,8 @@ html.has-modal {
     padding: 20px 24px 16px;
     overflow: hidden;
     border-radius: var(--radius);
-    background: var(--white);
-    border-top: 4px solid var(--green);
+    background: var(--surface);
+    border-top: 4px solid var(--accent-soft);
 }
 
 .modal__header {
@@ -1685,7 +1830,7 @@ html.has-modal {
     padding: 0;
     border: 1px solid var(--line);
     border-radius: 50%;
-    background: var(--white);
+    background: var(--surface);
     color: var(--text);
     font-size: 1.625rem;
     line-height: 1;
@@ -1694,8 +1839,8 @@ html.has-modal {
 }
 
 .modal__close:hover {
-    background: var(--soft-pink);
-    border-color: var(--pink);
+    background: var(--surface-alt-2);
+    border-color: var(--accent-soft);
 }
 
 .modal__pdf {
@@ -1704,7 +1849,7 @@ html.has-modal {
     height: min(70vh, 640px);
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: var(--mint);
+    background: var(--bg-alt);
 }
 
 .modal__pdf[hidden] {
@@ -1720,7 +1865,7 @@ html.has-modal {
     object-fit: contain;
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: var(--white);
+    background: #FFFFFF;   /* the certificate itself is printed on white */
 }
 
 .modal__preview[hidden] {
@@ -1731,7 +1876,7 @@ html.has-modal {
 .modal__fallback {
     padding: 32px 16px;
     border-radius: 8px;
-    background: var(--mint);
+    background: var(--bg-alt);
     text-align: center;
     color: var(--text);
 }
@@ -1752,12 +1897,12 @@ html.has-modal {
 .modal__links a {
     text-decoration: none;
     color: var(--text);
-    border-bottom: 1px solid var(--green);
+    border-bottom: 1px solid var(--accent-soft);
 }
 
 .modal__links a:hover {
     color: var(--text);
-    border-bottom-color: var(--pink);
+    border-bottom-color: var(--accent);
 }
 
 /* Screenshot popup: the box shrinks to fit the image
@@ -1815,21 +1960,26 @@ html.has-modal {
         --section-space: 96px;
     }
 
+    .nav {
+        gap: 18px;
+    }
+
     .nav__menu {
         gap: 2px;
     }
 
     .nav__link {
-        padding: 8px 14px;
+        padding: 8px 12px;
     }
 
     .hero__inner {
         gap: 56px;
     }
 
-    .about__grid {
+    /* Tablets: the About cards stack into one column */
+    .about__body {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 20px;
     }
 
     /* Tablet and smaller: screenshot on top at full width, details below */
@@ -1854,24 +2004,33 @@ html.has-modal {
     }
 }
 
-/* Mobile menu kicks in below 860px so the links never get cramped */
+/* Mobile menu kicks in below 860px so the links never get cramped.
+   The bar stretches across the screen: logo on the left, theme toggle and menu
+   button on the right. The links drop down in a rounded panel under the bar. */
 @media (max-width: 860px) {
+    .nav {
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 8px 0 22px;
+    }
+
     .nav__toggle {
         display: flex;
     }
 
     .nav__menu {
         position: absolute;
-        top: var(--nav-height);
+        top: calc(100% + 8px);
         left: 0;
         right: 0;
         flex-direction: column;
-        justify-content: flex-start;
+        align-items: stretch;
         gap: 4px;
-        margin-left: 0;
-        padding: 12px var(--gutter) 24px;
-        background: var(--white);
-        box-shadow: 0 18px 30px -20px rgba(51, 51, 51, 0.4);
+        padding: 10px;
+        border: 1px solid var(--nav-border);
+        border-radius: 22px;
+        background: var(--nav-bg);
+        box-shadow: 0 18px 30px -18px var(--shadow-color);
         /* Hidden until the hamburger is clicked */
         visibility: hidden;
         opacity: 0;
@@ -1888,14 +2047,6 @@ html.has-modal {
     .nav__link {
         padding: 12px 16px;
         font-size: 1rem;
-    }
-
-    /* The current section's dot sits on the right of its row */
-    .nav__link::after {
-        left: auto;
-        right: 16px;
-        bottom: 50%;
-        margin: 0 0 -2.5px;
     }
 }
 
@@ -1951,6 +2102,29 @@ html.has-modal {
         --radius: 18px;
     }
 
+    /* --- Navbar: a little more compact --- */
+    .site-header {
+        padding: 0 12px;
+    }
+
+    .nav {
+        height: calc(var(--nav-height) - 18px);
+        padding: 0 5px 0 18px;
+    }
+
+    .nav__logo {
+        font-size: 1.4375rem;
+    }
+
+    .nav__actions {
+        gap: 2px;
+    }
+
+    .theme-toggle {
+        width: 38px;
+        height: 38px;
+    }
+
     /* --- Shared section spacing --- */
 
     /* Every section (Projects included) lands its label 24px below the navbar.
@@ -1974,7 +2148,7 @@ html.has-modal {
 
     /* --- Home --- */
     .hero {
-        padding: 28px 0 var(--section-space);
+        padding: calc(28px + var(--nav-height)) 0 var(--section-space);
     }
 
     .hero__ring {
@@ -1997,7 +2171,7 @@ html.has-modal {
         padding: 4px;
     }
 
-    /* Decorative green arch and warm pink outline sit closer to the smaller photo */
+    /* Decorative green arch and outline sit closer to the smaller photo */
     .photo-frame::before {
         transform: translate(-12px, -12px);
     }
@@ -2025,30 +2199,26 @@ html.has-modal {
         margin-bottom: 24px;
     }
 
-    .btn--hero {
-        padding: 15px 30px;
-        font-size: 0.8125rem;
+    /* The two buttons share the row and grow to fill it; on the narrowest
+       phones they wrap and each takes the full width */
+    .hero__actions {
+        gap: 10px;
+    }
+
+    .hero__actions .btn {
+        flex: 1 1 auto;
+        padding: 14px 18px;
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
     }
 
     /* --- About Me --- */
-    .about__grid {
-        gap: 16px;
-    }
-
-    .about__intro {
-        padding: 24px 22px;
-    }
-
-    .about__lead {
-        font-size: 1.375rem;
-    }
-
     .about__body {
         gap: 14px;
     }
 
     .about__card {
-        padding: 20px;
+        padding: 24px 20px 22px;
     }
 
     .about__card:hover {
@@ -2161,13 +2331,9 @@ html.has-modal {
         line-height: 1.45;
     }
 
-    /* Technical becomes 2 x 2 so "HTML & CSS" and its two logos have room */
+    /* Tools and Technical keep three tiles in a row */
     .logo-grid {
         gap: 8px;
-    }
-
-    .logo-grid--4 {
-        grid-template-columns: repeat(2, 1fr);
     }
 
     .logo-tile {
@@ -2238,14 +2404,16 @@ html.has-modal {
         width: 8px;
         height: 8px;
         border-radius: 4px;
-        background: var(--green);
-        transition: width 0.3s var(--ease), background-color 0.3s ease;
+        background: var(--accent-soft);
+        opacity: 0.5;
+        transition: width 0.3s var(--ease), background-color 0.3s ease, opacity 0.3s ease;
     }
 
-    /* The dot for the certificate on screen becomes a longer pink bar */
+    /* The dot for the certificate on screen becomes a longer, deeper bar */
     .carousel-dot.is-active {
         width: 20px;
-        background: var(--pink);
+        background: var(--accent);
+        opacity: 1;
     }
 
     .certificate__top {
