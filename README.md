@@ -32,7 +32,7 @@ The website features a responsive layout and interactive elements to provide a u
 | CSS3 | Styling, layout, animations, and responsiveness |
 | JavaScript | Interactive features and website functionality |
 | PDF.js | Certificate PDF viewing on mobile devices |
-| Google Fonts | Typography |
+| System Fonts | Typography |
 
 **Framework:** None. The website uses Vanilla HTML, CSS, and JavaScript.
 
