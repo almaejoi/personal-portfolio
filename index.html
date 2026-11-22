@@ -10,13 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Almejoy C. Ancero, aspiring Web Developer & UI/UX designer and BSCS student.">
     <title>Almejoy C. Ancero | Aspiring UI/UX Designer</title>
-    <!-- Fonts: Cormorant Garamond (headings) + Inter (body text), stored in assets/fonts/
-         so the page looks the same with or without internet. The @font-face rules are in
-         css/style.css, section 1. "preload" starts downloading the font files used at the top of the page early,
-         so the text appears in the right font without a visible switch. -->
-    <link rel="preload" href="assets/fonts/cormorant-garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/cormorant-garamond-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <!-- Fonts: Georgia (headings) + Arial (body text) are system fonts, so nothing is downloaded
+         and the page looks the same with or without internet. Set in css/style.css, section 1. -->
     <link rel="stylesheet" href="css/style.css">
     <!-- Runs early, before the page is drawn:
          1. the "js" class, so the fade-in animation never causes a flash of content
@@ -78,7 +73,7 @@
         <!-- A rounded bar centered near the top of the page: logo, links, then the
              theme toggle (and, on phones, the menu button) -->
         <nav class="nav" aria-label="Main navigation">
-            <a href="#home" class="nav__logo" aria-label="Almie, back to top">Almie<span class="nav__dot" aria-hidden="true">.</span></a>
+            <a href="#home" class="nav__logo" aria-label="Almie, back to top">Almie</a>
             <ul class="nav__menu" id="nav-menu">
                 <li><a href="#home" class="nav__link">Home</a></li>
                 <li><a href="#about" class="nav__link">About Me</a></li>
