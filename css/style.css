@@ -12,7 +12,7 @@
    9. Certificates
    10. Contact
    11. Footer
-   12. Popups (certificate PDF and project screenshot)
+   12. Popups (certificate and project screenshot)
    13. Scroll animations
    14. Responsive (tablet, mobile)
    15. Reduced motion
@@ -84,7 +84,7 @@
     --drop: rgba(19, 37, 25, 0.18);
     --backdrop: rgba(19, 37, 25, 0.75);
 
-    --font-serif: Georgia, 'Times New Roman', Times, serif;
+    --font-serif: Perpetua, 'Times New Roman', Times, serif;
     --font-sans: Arial, 'Helvetica Neue', Helvetica, sans-serif;
 
     --container: 1160px;
@@ -1742,7 +1742,7 @@ em {
 }
 
 
-/* 12. Popups (certificate PDF and project screenshot)
+/* 12. Popups (certificate and project screenshot)
    Built on the HTML <dialog> element. main.js opens them with showModal(),
    which centers them, dims the page behind (::backdrop), and handles Escape. */
 .modal {
@@ -1843,66 +1843,19 @@ html.has-modal {
     border-color: var(--accent-soft);
 }
 
-.modal__pdf {
+/* Certificate image: the whole certificate is always visible.
+   It fills the popup's width, but is never taller than the screen allows
+   (then it shrinks and is centered), and keeps its own proportions. */
+.modal__certificate {
     display: block;
-    width: 100%;
-    height: min(70vh, 640px);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--bg-alt);
-}
-
-.modal__pdf[hidden] {
-    display: none;
-}
-
-/* Phones: the certificate as a picture, full popup width, in its own proportions */
-.modal__preview {
-    display: block;
-    width: 100%;
+    width: auto;
     height: auto;
-    max-height: calc(100vh - 160px);   /* never taller than the screen allows */
-    object-fit: contain;
+    max-width: 100%;
+    max-height: calc(100vh - 140px);   /* room for the title bar and the popup's padding */
+    margin: 0 auto;
     border: 1px solid var(--line);
     border-radius: 8px;
     background: #FFFFFF;   /* the certificate itself is printed on white */
-}
-
-.modal__preview[hidden] {
-    display: none;
-}
-
-/* Shown when the browser cannot display PDFs inside the page */
-.modal__fallback {
-    padding: 32px 16px;
-    border-radius: 8px;
-    background: var(--bg-alt);
-    text-align: center;
-    color: var(--text);
-}
-
-.modal__fallback p {
-    margin-bottom: 18px;
-}
-
-.modal__links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px 24px;
-    margin: 12px 0 0;
-    font-size: 0.875rem;
-}
-
-.modal__links a {
-    text-decoration: none;
-    color: var(--text);
-    border-bottom: 1px solid var(--accent-soft);
-}
-
-.modal__links a:hover {
-    color: var(--text);
-    border-bottom-color: var(--accent);
 }
 
 /* Screenshot popup: the box shrinks to fit the image
@@ -2509,14 +2462,6 @@ html.has-modal {
 
     .modal__title {
         font-size: 1.125rem;
-    }
-
-    .modal__pdf {
-        height: 65vh;
-    }
-
-    .modal__links {
-        justify-content: center;
     }
 
     .modal--image {

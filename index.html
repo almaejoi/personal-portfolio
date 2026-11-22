@@ -394,9 +394,10 @@
             <h2 class="section__title">Learning <em>milestones</em>.</h2>
         </header>
         <!-- On phones this list becomes a swipeable carousel (style.css section 14, main.js section 5) -->
-        <!-- To add a certificate: put the PDF in the certificates folder, copy one <li class="certificate">
-             block and edit the copy, then add one more <span class="carousel-dot"> in the dots below.
-             View Certificate opens the PDF in a popup (main.js); without JavaScript it opens in a new tab. -->
+        <!-- To add a certificate: save it as an image in images/certificates (the original PDFs are kept in
+             the certificates folder), copy one <li class="certificate"> block and edit the copy, then add
+             one more <span class="carousel-dot"> in the dots below.
+             View Certificate shows the image in a popup (main.js); without JavaScript it opens the image. -->
         <ul class="certificates" id="certificate-track" aria-label="Certificates">
             <li class="certificate reveal">
                 <div class="certificate__top">
@@ -409,8 +410,8 @@
                 <p class="certificate__issuer">Micro-credentials course</p>
                 <div class="certificate__footer">
                     <time class="certificate__date" datetime="2026-09-14">September 14, 2026</time>
-                    <a href="certificates/ai-literacy.pdf" class="btn btn--outline" target="_blank" rel="noopener"
-                       data-pdf-modal data-title="Introduction to AI Literacy and Responsible Use"
+                    <a href="images/certificates/ai-literacy.jpg" class="btn btn--outline"
+                       data-certificate-modal data-title="Introduction to AI Literacy and Responsible Use"
                        aria-label="View certificate: Introduction to AI Literacy and Responsible Use">View Certificate</a>
                 </div>
             </li>
@@ -425,8 +426,8 @@
                 <p class="certificate__issuer">Integrated Office Solutions, Inc.</p>
                 <div class="certificate__footer">
                     <time class="certificate__date" datetime="2025-09-05">September 5, 2025</time>
-                    <a href="certificates/be-more-digitalino.pdf" class="btn btn--outline" target="_blank" rel="noopener"
-                       data-pdf-modal data-title="Integrated OS – Be More Digi-TALINO"
+                    <a href="images/certificates/be-more-digitalino.jpg" class="btn btn--outline"
+                       data-certificate-modal data-title="Integrated OS – Be More Digi-TALINO"
                        aria-label="View certificate: Integrated OS – Be More Digi-TALINO">View Certificate</a>
                 </div>
             </li>
@@ -441,8 +442,8 @@
                 <p class="certificate__issuer">Cisco Networking Academy</p>
                 <div class="certificate__footer">
                     <time class="certificate__date" datetime="2026-05-22">May 22, 2026</time>
-                    <a href="certificates/networking-basics.pdf" class="btn btn--outline" target="_blank" rel="noopener"
-                       data-pdf-modal data-title="Networking Basics"
+                    <a href="images/certificates/networking-basics.jpg" class="btn btn--outline"
+                       data-certificate-modal data-title="Networking Basics"
                        aria-label="View certificate: Networking Basics">View Certificate</a>
                 </div>
             </li>
@@ -526,25 +527,15 @@
 </section>
 
 <!-- ===================== POPUPS (filled in by main.js) ===================== -->
-<!-- Certificate PDF popup -->
-<dialog class="modal modal--pdf" id="pdf-modal" aria-labelledby="pdf-modal-title">
+<!-- Certificate popup: the certificate as an image, with only a close button -->
+<dialog class="modal modal--certificate" id="certificate-modal" aria-labelledby="certificate-modal-title">
     <div class="modal__box">
         <div class="modal__header">
-            <h2 class="modal__title" id="pdf-modal-title">Certificate</h2>
+            <h2 class="modal__title" id="certificate-modal-title">Certificate</h2>
             <button type="button" class="modal__close" data-modal-close aria-label="Close certificate">&times;</button>
         </div>
-        <!-- Computers and tablets: the browser's own PDF viewer -->
-        <iframe class="modal__pdf" title="Certificate PDF"></iframe>
-        <!-- Phones: the certificate drawn as a picture that fits the popup's width (main.js) -->
-        <canvas class="modal__preview" width="842" height="595" role="img" aria-label="Certificate" hidden></canvas>
-        <!-- Shown instead when the certificate cannot be displayed inside the page -->
-        <div class="modal__fallback" hidden>
-            <p>This browser can't show PDF files inside the page.</p>
-            <a class="btn" data-pdf-open target="_blank" rel="noopener">Open PDF</a>
-        </div>
-        <p class="modal__links">
-            <a data-pdf-open target="_blank" rel="noopener">Open in new tab</a>
-        </p>
+        <!-- main.js sets the image for the certificate that was clicked -->
+        <img class="modal__certificate" alt="">
     </div>
 </dialog>
 <!-- Project screenshot popup -->

@@ -5,7 +5,7 @@
    3. Highlight the current section's nav link
    4. Fade-in sections while scrolling
    5. Certificate carousel (phones)
-   6. Popups: certificate PDF and project screenshot
+   6. Popups: certificate and project screenshot
    7. Footer year
    8. Dark / light mode
    ========================================================================== */
@@ -140,10 +140,10 @@
    }
    
    
-   /* 6. Popups: certificate PDF and project screenshot
+   /* 6. Popups: certificate and project screenshot
       Both popups are <dialog> elements in index.html. showModal() opens one in
       the center of the screen and dims the page behind it. */
-   const pdfModal = document.getElementById('pdf-modal');
+   const certificateModal = document.getElementById('certificate-modal');
    const imageModal = document.getElementById('image-modal');
    
    function openModal(modal) {
@@ -165,7 +165,7 @@
    }
    
    // The three ways to close: X button, click outside the box, Escape key
-   [pdfModal, imageModal].forEach((modal) => {
+   [certificateModal, imageModal].forEach((modal) => {
        if (!modal) return;
        modal.querySelector('[data-modal-close]').addEventListener('click', () => closeModal(modal));
    
@@ -183,117 +183,24 @@
        modal.addEventListener('close', () => document.documentElement.classList.remove('has-modal'));
    });
    
-   // Certificate PDF popup
-   if (pdfModal) {
-       const pdfTitle = pdfModal.querySelector('.modal__title');
-       const pdfFallback = pdfModal.querySelector('.modal__fallback');
-       const pdfPreview = pdfModal.querySelector('.modal__preview');
-       let pdfFrame = pdfModal.querySelector('.modal__pdf');
+   // Certificate popup: shows the certificate image (images/certificates) inside the page.
+   // The images are stored with the site, so this works without an internet connection.
+   if (certificateModal) {
+       const certificateTitle = certificateModal.querySelector('.modal__title');
+       const certificateImage = certificateModal.querySelector('.modal__certificate');
    
-       // Most computers can show a PDF inside the page; many phones cannot.
-       // Those browsers report navigator.pdfViewerEnabled === false.
-       const canShowPdf = navigator.pdfViewerEnabled !== false;
-   
-       // On phones (same width as the phone layout in style.css), the certificate is drawn
-       // as a picture instead: it fits the popup's width exactly and works on every phone.
-       const isPhone = window.matchMedia('(max-width: 640px)');
-   
-       // PDF.js (Mozilla's PDF reader) draws the certificate. It is only downloaded
-       // the first time a certificate is opened on a phone.
-       const PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
-       let pdfjsLoading = null;
-   
-       function loadPdfJs() {
-           if (!pdfjsLoading) {
-               pdfjsLoading = new Promise((resolve, reject) => {
-                   const script = document.createElement('script');
-                   script.src = PDFJS_URL + 'pdf.min.js';
-                   script.onload = () => {
-                       window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_URL + 'pdf.worker.min.js';
-                       resolve(window.pdfjsLib);
-                   };
-                   script.onerror = () => {
-                       pdfjsLoading = null;   // try again next time
-                       reject(new Error('PDF.js could not be loaded'));
-                   };
-                   document.head.append(script);
-               });
-           }
-           return pdfjsLoading;
-       }
-   
-       // Draws page 1 of the certificate onto the canvas, sharp on high-resolution screens.
-       // "drawing" makes sure a slow certificate never draws over one opened after it.
-       let drawing = 0;
-   
-       async function drawPreview(url) {
-           const current = ++drawing;
-           try {
-               const pdfjsLib = await loadPdfJs();
-               const pdf = await pdfjsLib.getDocument(url).promise;
-               const page = await pdf.getPage(1);
-               if (current !== drawing) return;
-   
-               const pixelRatio = Math.min(window.devicePixelRatio || 1, 3);
-               const fitWidth = pdfPreview.clientWidth / page.getViewport({ scale: 1 }).width;
-               const viewport = page.getViewport({ scale: fitWidth * pixelRatio });
-               pdfPreview.width = viewport.width;    // the canvas takes the certificate's own shape
-               pdfPreview.height = viewport.height;
-               await page.render({ canvasContext: pdfPreview.getContext('2d'), viewport }).promise;
-           } catch (error) {
-               if (current !== drawing) return;
-               pdfPreview.hidden = true;            // show the "Open PDF" message instead
-               pdfFallback.hidden = false;
-           }
-       }
-   
-       function clearPreview() {
-           drawing++;
-           pdfPreview.width = 842;                  // back to a blank landscape page
-           pdfPreview.height = 595;
-       }
-   
-       // A new <iframe> is used each time, so closing the popup does not
-       // leave extra steps in the browser's Back button history
-       function setPdf(url) {
-           const frame = pdfFrame.cloneNode(false);
-           if (url) {
-               frame.src = url;
-           } else {
-               frame.removeAttribute('src');
-           }
-           pdfFrame.replaceWith(frame);
-           pdfFrame = frame;
-       }
-   
-       document.querySelectorAll('[data-pdf-modal]').forEach((link) => {
+       document.querySelectorAll('[data-certificate-modal]').forEach((link) => {
            link.addEventListener('click', (event) => {
-               event.preventDefault();   // stay on this page instead of opening a new tab
-               const url = link.getAttribute('href');
-   
-               pdfTitle.textContent = link.dataset.title;
-               pdfModal.querySelectorAll('[data-pdf-open]').forEach((a) => { a.href = url; });
-   
-               const usePreview = isPhone.matches;
-               const useFrame = !usePreview && canShowPdf;
-               pdfPreview.hidden = !usePreview;
-               pdfFrame.hidden = !useFrame;
-               pdfFallback.hidden = usePreview || useFrame;
-               if (useFrame) setPdf(url);
-   
-               openModal(pdfModal);
-   
-               if (usePreview) {
-                   pdfPreview.setAttribute('aria-label', 'Certificate: ' + link.dataset.title);
-                   drawPreview(url);   // after opening, so the canvas width can be measured
-               }
+               event.preventDefault();   // stay on this page instead of opening the image file
+               certificateTitle.textContent = link.dataset.title;
+               certificateImage.src = link.getAttribute('href');
+               certificateImage.alt = 'Certificate: ' + link.dataset.title;
+               openModal(certificateModal);
            });
        });
    
-       pdfModal.addEventListener('close', () => {
-           setPdf(null);
-           clearPreview();
-       });
+       // Empty the popup when it closes, so the next certificate never shows the previous one first
+       certificateModal.addEventListener('close', () => certificateImage.removeAttribute('src'));
    }
    
    // Project screenshot popup
