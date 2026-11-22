@@ -17,16 +17,7 @@
    14. Responsive (tablet, mobile)
    15. Reduced motion
    ========================================================================== */
-
-
-/* 1. Fonts (stored in the project, so the site looks the same offline)
-   The font files are in assets/fonts/. They are the same files Google Fonts serves:
-   Cormorant Garamond (headings) and Inter (body text). Both are "variable" fonts,
-   so one file holds every weight, which is why each rule lists a weight range.
-   Each font has two files: "latin" (English letters and symbols) and "latin-ext"
-   (accented letters such as ñ). The browser downloads latin-ext only if a page uses those letters.
-   "font-display: swap" shows the text right away while the font loads.
-   Licenses: assets/fonts/OFL-*.txt (SIL Open Font License, free to use and share). */
+   
 @font-face {
     font-family: 'Cormorant Garamond';
     font-style: normal;
